@@ -13,7 +13,16 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 		} elseif ($this->metaDataRelation == "_self_") {
 			// special case for meta data tables
 			return $this->owner;
-		} else {
+		} elseif (strpos($this->metaDataRelation, ".")) {
+			// if there's a dot in the name, build the return value in object notation
+			$parts = explode(".", $this->metaDataRelation);
+			$return = $this->owner;
+			foreach($parts AS $part) {
+				$return = $return->$part;
+			}
+			return $return;
+			
+		}else {
 			// manual setting
 			return $this->owner->{$this->metaDataRelation};
 		}
