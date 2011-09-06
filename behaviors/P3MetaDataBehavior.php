@@ -30,7 +30,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 	
 	public function beforeDelete($event) {
 		parent::beforeDelete($event);
-		if ($this->getMetaDataRelation()->checkAccessDelete) {
+		if ($this->getMetaDataRelation() !== null && $this->getMetaDataRelation()->checkAccessDelete) {
 			if (Yii::app()->user->checkAccess($this->getMetaDataRelation()->checkAccessDelete) === false) {
 				throw new CHttpException(403, "You are not authorized to perform this action. Access restricted by P3MetaDataBehavior.");
 				return false;
@@ -43,7 +43,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 
 	public function beforeSave($event) {
 		parent::beforeSave($event);
-		if ($this->getMetaDataRelation()->checkAccessUpdate) {
+		if ($this->getMetaDataRelation() !== null && $this->getMetaDataRelation()->checkAccessUpdate) {
 			if (Yii::app()->user->checkAccess($this->getMetaDataRelation()->checkAccessUpdate) === false) {
 				throw new CHttpException(403, "You are not authorized to perform this action. Access restricted by P3MetaDataBehavior.");
 				return false;
