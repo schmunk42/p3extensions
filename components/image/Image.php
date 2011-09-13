@@ -1,6 +1,7 @@
 <?php
 
-Yii::import('application.extensions.image.Image_Driver');
+Yii::setPathOfAlias('p3exensions-image-image', dirname(__FILE__));
+Yii::import('p3exensions-image-image.Image_Driver');
 
 /**
  * Manipulate images using standard methods such as resize, crop, rotate, etc.
@@ -120,7 +121,7 @@ class Image {
 		$driver = 'Image_'.ucfirst($this->config['driver']).'_Driver';
 
         // Load the driver
-        Yii::import("application.extensions.image.drivers.$driver");
+        Yii::import("p3exensions-image-image.drivers.$driver");
 
 		// Initialize the driver
 		$this->driver = new $driver($this->config['params']);

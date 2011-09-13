@@ -1,6 +1,7 @@
 <?php
 
-Yii::import('application.extensions.image.Image');
+Yii::setPathOfAlias('p3exensions-image-cimagecomponent', dirname(__FILE__));
+Yii::import('p3exensions-image-cimagecomponent.Image');
 
 /**
  * Description of CImageComponent
