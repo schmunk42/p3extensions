@@ -33,6 +33,7 @@ class Image {
 		IMAGETYPE_PNG => 'png',
 		IMAGETYPE_TIFF_II => 'tiff',
 		IMAGETYPE_TIFF_MM => 'tiff',
+		IMAGETYPE_BMP => 'bmp',
 	);
 
 	// Driver instance
@@ -93,7 +94,7 @@ class Image {
 
 		// Check to make sure the image type is allowed
 		if ( ! isset(Image::$allowed_types[$image_info[2]]))
-			throw new CException('image type not allowed');
+			throw new CException('image type '.$image_info[2].' not allowed');
 
 		// Image has been validated, load it
 		$this->image = array
