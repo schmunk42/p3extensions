@@ -1,0 +1,106 @@
+@charset "utf-8";
+/* CSS Document */
+
+input.je-key-input, input.je-val-input{
+	border:none;
+	/*border-bottom:solid 1px #CCC;*/
+	text-align:center;
+	height:18px;
+	padding:0px;
+	margin:0px;
+	vertical-align:top;
+}
+
+.je-tab{
+	display:block;
+	float:left;
+	width:18px;
+	height:18px;
+	background:url(images/tree_empty.gif) no-repeat center center;
+}
+
+.je-tree-minus-icon{
+	display:block;
+	float:left;
+	width:18px;
+	height:18px;
+	background:url(images/arrows.gif) -18px center no-repeat;
+	cursor:pointer;	
+}
+
+.je-tree-plus-icon{
+	display:block;
+	float:left;
+	width:18px;
+	height:18px;
+	background:url(images/arrows.gif) 0px center no-repeat;
+	cursor:pointer;	
+}
+
+.je-tree-node-open-icon{
+	display:block;
+	float:left;
+	width:18px;
+	height:18px;
+	background:url(images/tree_folder-open.gif) no-repeat center center;
+
+}
+
+.je-tree-node-closed-icon{
+	display:block;
+	float:left;
+	width:18px;
+	height:18px;
+	background:url(images/tree_folder_closed.gif) no-repeat center center;
+}
+
+.je-tree-leaf-icon{
+	display:block;
+	float:left;
+	width:18px;
+	height:18px;
+	background:url(images/icon-list.gif) no-repeat center center;
+}
+
+.je-children{
+	border-top:solid 1px #EEE;
+}
+.je-leaf{
+	vertical-align:middle;
+	border-bottom:solid 1px #EEE;
+}
+
+.je-insert-node-brother{
+	display:inline-table;
+	width:18px;
+	height:18px;
+	background:url(images/icon-folder-new.gif) no-repeat center center;
+}
+.je-insert-leaf-brother{
+	display:inline-table;
+	width:18px;
+	height:18px;
+	background:url(images/icon-list-new.gif) no-repeat center center;
+}
+.je-add-node-child{
+	display:inline-table;
+	width:18px;
+	height:18px;
+	background:url(images/icon-folder-new-green.gif) no-repeat center center;
+}
+.je-add-leaf-child{
+	display:inline-table;
+	width:18px;
+	height:18px;
+	background:url(images/icon-list-new-green.gif) no-repeat center center;
+}
+.je-del{
+	display:inline-table;
+	width:18px;
+	height:18px;
+	background:url(images/delete.gif) no-repeat center center;
+}
+
+.je-insert-node-brother:hover, .je-insert-leaf-brother:hover, .je-add-node-child:hover, .je-add-leaf-child:hover, .je-del:hover{
+	cursor:pointer;
+}
