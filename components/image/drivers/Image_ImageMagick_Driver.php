@@ -44,7 +44,7 @@ class Image_ImageMagick_Driver extends Image_Driver {
 
 		// Check to make sure the provided path is correct
 		if ( ! is_file(realpath($config['directory']).'/convert'.$this->ext))
-			throw new CException('image imagemagick not_found');
+			throw new CException('imagemagick not_found in '.$config['directory']);
 
 		// Set the installation directory
 		$this->dir = str_replace('\\', '/', realpath($config['directory'])).'/';
