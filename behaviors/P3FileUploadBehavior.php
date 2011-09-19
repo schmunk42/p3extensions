@@ -53,7 +53,7 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 					$this->deleteFile($this->Owner->path);
 				}
 				if (!$this->Owner->title) {
-					$this->Owner->title = $file->name;					
+					$this->Owner->title = P3StringHelper::cleanName($file->name,32);					
 				}
 				$this->Owner->path = $relativeFilePath;
 				$this->Owner->mimeType = $file->type;
@@ -74,12 +74,7 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 		$this->prepareDataDirectory();
 		$this->deleteFile($this->Owner->path);
 	}
-
-	private function generateUniqueFilename($path) {
-		$pathinfo = pathinfo($path);
-		return $pathinfo['filename'] . uniqid('-') . '.' . $pathinfo['extension'];
-	}
-
+	
 	private function deleteFile($path) {
 		$fileToDelete = $this->_baseDataPath . DIRECTORY_SEPARATOR . $path;
 		if (is_file($fileToDelete)) {
@@ -92,7 +87,7 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 			Yii::log("Error file '" . $path . "' could not be deleted. File not found.", CLogger::LEVEL_WARNING);
 		}
 	}
-
+	
 	private function prepareDataDirectory() {
 		$this->_baseDataPath = Yii::getPathOfAlias($this->dataAlias);
 		$this->_fullDataPath = Yii::getPathOfAlias($this->dataAlias) . DIRECTORY_SEPARATOR . $this->dataSubdirectory;

@@ -1,14 +1,16 @@
 <?php
 
 class P3MetaDataBehavior extends CActiveRecordBehavior {
-	
+
 	public $metaDataRelation;
-	
-	private function getMetaDataRelation(){
+
+	const STATUS_ACTIVE = 30;
+
+	private function getMetaDataRelation() {
 		if (!$this->metaDataRelation) {
 			// auto-find
 			$class = get_class($this->owner);
-			$metaDataRelation = strtolower($class[0]).substr($class,1).'Meta';
+			$metaDataRelation = strtolower($class[0]) . substr($class, 1) . 'Meta';
 			return $this->owner->$metaDataRelation;
 		} elseif ($this->metaDataRelation == "_self_") {
 			// special case for meta data tables
@@ -17,17 +19,16 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 			// if there's a dot in the name, build the return value in object notation
 			$parts = explode(".", $this->metaDataRelation);
 			$return = $this->owner;
-			foreach($parts AS $part) {
+			foreach ($parts AS $part) {
 				$return = $return->$part;
 			}
 			return $return;
-			
-		}else {
+		} else {
 			// manual setting
 			return $this->owner->{$this->metaDataRelation};
 		}
 	}
-	
+
 	public function beforeDelete($event) {
 		parent::beforeDelete($event);
 		if ($this->getMetaDataRelation() !== null && $this->getMetaDataRelation()->checkAccessDelete) {
@@ -50,7 +51,27 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 			}
 		}
 		return true;
-	}	
+	}
+
+	public function afterSave($event) {
+		if ($this->getMetaDataRelation() === null) {
+			$metaClassName = $this->owner->getActiveRelation($this->metaDataRelation)->className;
+			$metaModel = new $metaClassName;
+			$metaModel->id = $this->owner->id;
+			$metaModel->status = self::STATUS_ACTIVE;
+			$metaModel->language = Yii::app()->language;
+			$metaModel->owner = Yii::app()->user->id;
+			$metaModel->createdAt = new CDbExpression('NOW()');
+			$metaModel->createdBy = Yii::app()->user->id;
+			$metaModel->model = get_class($this->owner);
+		} else {
+			$metaModel = $this->getMetaDataRelation();
+			$metaModel->modifiedAt = new CDbExpression('NOW()');
+			$metaModel->modifiedBy = Yii::app()->user->id;			
+		}
+		$metaModel->save();
+		return true;
+	}
 
 }
 
