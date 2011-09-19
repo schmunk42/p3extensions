@@ -11,7 +11,7 @@ class EFileUpload extends CWidget {
 	}
 
 	private function registerClientScripts(){
-		$assetsPath = dirname(__FILE__).DIRECTORY_SEPARATOR.'vendor-v5';
+		$assetsPath = dirname(__FILE__).DIRECTORY_SEPARATOR.'vendor';
 
 		$cs = Yii::app()->clientScript;
 		$am = Yii::app()->assetManager;
@@ -27,7 +27,7 @@ class EFileUpload extends CWidget {
 		$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'jquery.iframe-transport.js'), CClientScript::POS_END);
 		$cs->registerCssFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'jquery.fileupload-ui.css'));
 
-		$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'init.js'), CClientScript::POS_END);
+		$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'init.js'), CClientScript::POS_END);
 	}
 }
 ?>
