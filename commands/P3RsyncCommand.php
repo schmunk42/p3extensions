@@ -1,7 +1,4 @@
 <?php 
-/**
- * Based upon http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c2550 from Leric
- */
 
 class P3RsyncCommand extends CConsoleCommand
 {
