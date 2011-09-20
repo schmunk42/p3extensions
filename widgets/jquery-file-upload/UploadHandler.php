@@ -63,10 +63,10 @@ class UploadHandler
             $file->size = filesize($file_path);
             $file->url = $this->options['upload_url'].rawurlencode($file->name);
             foreach($this->options['image_versions'] as $version => $options) {
-                if (is_file($options['upload_dir'].$file_name)) {
+				#if (is_file($options['upload_dir'].$file_name)) {
                     $file->{$version.'_url'} = $options['upload_url']
                         .rawurlencode($file->name);
-                }
+                #}
             }
             $file->delete_url = $this->options['script_url']
                 .'?file='.rawurlencode($file->name);
@@ -198,10 +198,10 @@ class UploadHandler
             if ($file_size === $file->size) {
                 $file->url = $this->options['upload_url'].rawurlencode($file->name);
                 foreach($this->options['image_versions'] as $version => $options) {
-                    if ($this->create_scaled_image($file->name, $options)) {
+                    #if ($this->create_scaled_image($file->name, $options)) {
                         $file->{$version.'_url'} = $options['upload_url']
                             .rawurlencode($file->name);
-                    }
+                    #}
                 }
             } else if ($this->options['discard_aborted_uploads']) {
                 unlink($file_path);
