@@ -43,7 +43,7 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 
 		if ($file instanceof CUploadedFile && $file->getError() == UPLOAD_ERR_OK && !$this->Owner->hasErrors()) {
 
-			$uniqueFilename = $this->generateUniqueFilename($file->getName());
+			$uniqueFilename = P3StringHelper::generateUniqueFilename($file->getName());
 			$fullFilePath = $this->_fullDataPath . DIRECTORY_SEPARATOR . $uniqueFilename;
 			$relativeFilePath = $this->_relativeDataPath . DIRECTORY_SEPARATOR . $uniqueFilename;
 
