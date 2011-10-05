@@ -65,7 +65,8 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 			}
 		} else {
 			if ($this->Owner->isNewRecord) {
-				$this->Owner->addError('filePath', 'No file uploaded!');
+				#$this->Owner->addError('filePath', 'No file uploaded!');
+				Yii::trace('No file uploaded!');
 			}
 		}
 	}
