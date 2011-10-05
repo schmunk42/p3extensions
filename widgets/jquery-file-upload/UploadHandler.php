@@ -61,15 +61,14 @@ class UploadHandler
             $file = new stdClass();
             $file->name = $file_name;
             $file->size = filesize($file_path);
-            $file->url = $this->options['upload_url'].rawurlencode($file->name);
+            $file->url = $this->options['url'].rawurlencode($file->name);
             foreach($this->options['image_versions'] as $version => $options) {
 				#if (is_file($options['upload_dir'].$file_name)) {
                     $file->{$version.'_url'} = $options['upload_url']
                         .rawurlencode($file->name);
                 #}
             }
-            $file->delete_url = $this->options['script_url']
-                .'?file='.rawurlencode($file->name);
+            $file->delete_url = $this->options['script_url'].rawurlencode($file->name);
             $file->delete_type = 'DELETE';
             return $file;
         }
