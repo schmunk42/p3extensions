@@ -10,6 +10,11 @@ class P3DumpSchemaCommand extends CConsoleCommand {
 		$prefix = $args[1];
 		$tables = Yii::app()->db->schema->getTables($schema);
 		$code = '';
+		$code .= "if (Yii::app()->db->schema instanceof CMysqlSchema)\n";
+		$code .= "	\$options = 'ENGINE=InnoDB DEFAULT CHARSET=utf8';\n";
+		$code .= "else\n";
+		$code .= "	\$options = '';\n";
+		
 		foreach ($tables as $table) {
 			if (substr($table->name, 0, strlen($prefix)) != $prefix)
 				continue;
@@ -41,7 +46,7 @@ class P3DumpSchemaCommand extends CConsoleCommand {
 		$code .= "\n";
 		$code .= '  ), ';
 		$code .= "\n";
-		$code .= '  "' . $options . '");';
+		$code .= '  $options);';
 		return $code;
 	}
 
