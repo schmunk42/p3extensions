@@ -23,7 +23,9 @@ class P3DumpSchemaCommand extends CConsoleCommand {
 			$code .= $this->generateSchema($table, $schema);
 
 			$code .= "\n\n\n// Foreign Keys for table '" . $table->name . "'\n\n";
+			$code .= "if ((Yii::app()->db->schema instanceof CSqliteSchema) == false):\n";
 			$code .= $this->generateForeignKeys($table, $schema);
+			$code .= "\nendif;\n";
 
 			$code .= "\n\n\n// Data for table '" . $table->name . "'\n\n";
 			$code .= $this->generateInserts($table, $schema);
@@ -63,7 +65,7 @@ class P3DumpSchemaCommand extends CConsoleCommand {
 		$code = "";
 		foreach ($table->foreignKeys as $name => $foreignKey) {
 			#echo "FK" . $name . var_dump($foreignKey);
-			$code .= "\n\$this->addForeignKey('fk_{$foreignKey[0]}_{$name}', '{$table->name}', '{$name}', '{$foreignKey[0]}', '{$foreignKey[1]}', null, null); // update 'null' for ON DELTE and ON UPDATE";
+			$code .= "\n\$this->addForeignKey('fk_{$foreignKey[0]}_{$name}', '{$table->name}', '{$name}', '{$foreignKey[0]}', '{$foreignKey[1]}', null, null); // update 'null' for ON DELTE and ON UPDATE\n";
 		}
 		return $code;
 	}
