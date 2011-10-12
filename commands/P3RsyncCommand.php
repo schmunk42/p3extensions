@@ -31,6 +31,16 @@ EOS;
     }
     
     public function run($args) {
+        if (!isset($this->servers)) {
+            echo "No server specified in config!";
+            exit;
+        }
+        
+        if (!isset($this->aliases)) {
+            echo "No alias defined in config!";
+            exit;
+        }
+                
         if (!isset($args[2])) {
             $this->getHelp();
             exit;
@@ -44,7 +54,7 @@ EOS;
         
         $srcUrl = $this->servers[$src].$relativePath."/";
         $destUrl = $this->servers[$dest].$relativePath."/";
-        
+
         echo "Start rsync of '".$alias."' (".$relativePath.") from '".$src."' to '".$dest."'? [Yes|No] ";
         if(!strncasecmp(trim(fgets(STDIN)),'y',1)) {
             $cmd = "rsync -av ".$srcUrl." ".$destUrl;
