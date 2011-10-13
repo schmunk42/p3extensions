@@ -6,7 +6,7 @@ return array(
 			'type' => 'fckeditor',
 			'height' => 400,
 			'filebrowserWindowWidth' => '990',
-			'filebrowserWindowHeight' => '730',
+			'filebrowserWindowHeight' => '800',
 			'resize_minWidth' => '150',
 			/* Toolbar */
 			'toolbar_Custom' => array(
