@@ -35,6 +35,7 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 	private $_fullDataPath;
 	private $_relativeDataPath;
 	private $_trashPath;
+	private $_fileToDelete;
 
 	public function afterValidate($event) {
 
@@ -72,8 +73,12 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 	}
 
 	public function beforeDelete($event) {
+		$this->_fileToDelete = $this->Owner->path;
+	}
+
+	public function afterDelete($event) {
 		$this->prepareDataDirectory();
-		$this->deleteFile($this->Owner->path);
+		$this->deleteFile($this->_fileToDelete);
 	}
 	
 	private function deleteFile($path) {
