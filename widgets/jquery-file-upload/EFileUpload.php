@@ -2,12 +2,15 @@
 
 class EFileUpload extends CWidget {
 	
+	public $view = "fileUpload";
+	public $initJs = null;
+	
 	public function init(){
 		$this->registerClientScripts();
 	}
 	
 	public function run(){
-		$this->render('fileUpload');
+		$this->render($this->view);
 	}
 
 	private function registerClientScripts(){
@@ -27,7 +30,12 @@ class EFileUpload extends CWidget {
 		$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'jquery.iframe-transport.js'), CClientScript::POS_END);
 		$cs->registerCssFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'jquery.fileupload-ui.css'));
 
-		$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'init.js'), CClientScript::POS_END);
+		if ($this->initJs !== null) {
+			$cs->registerScriptFile($this->initJs, CClientScript::POS_END);
+		} else {
+			$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'init.js'), CClientScript::POS_END);
+		}
+		
 	}
 }
 ?>
