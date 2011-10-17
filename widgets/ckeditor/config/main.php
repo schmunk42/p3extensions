@@ -6,7 +6,7 @@ return array(
 			'type' => 'fckeditor',
 			'height' => 400,
 			'filebrowserWindowWidth' => '990',
-			'filebrowserWindowHeight' => '730',
+			'filebrowserWindowHeight' => '800',
 			'resize_minWidth' => '150',
 			/* Toolbar */
 			'toolbar_Custom' => array(
@@ -24,25 +24,27 @@ return array(
 			'pasteFromWordKeepsStructure' => true,
 			'templates_replaceContent' => false,
 			#'forcePasteAsPlainText' => true,
-			'contentsCss' => '/aktienbrief/ckeditor/ckeditor.css',
-			// ??? 'baseHref' => 'http://boerse-aktuell.dmstr.net/aktienbrief/',
+			'contentsCss' => '/css/ckeditor/ckeditor.css',
 			'bodyId' => 'ckeditor',
 			'bodyClass' => 'ckeditor',
 			/* Assets will be published with publishAsset() */
 			
-			'templates_files' => array('/aktienbrief/ckeditor/cktemplates.js'),
-			'stylesCombo_stylesSet' => 'my_styles:/aktienbrief/ckeditor/ckstyles.js',
+			'templates_files' => array('/css/ckeditor/cktemplates.js'),
+			'stylesCombo_stylesSet' => 'my_styles:/css/ckeditor/ckstyles.js',
 			
 			/* Standard-way to specify URLs - deprecated */
 			/*'filebrowserBrowseUrl' => '/p3media/ckeditor',
 			'filebrowserImageBrowseUrl' => '/p3media/ckeditor/image',
 			'filebrowserFlashBrowseUrl' => '/p3media/ckeditor/flash',*/
-			//'filebrowserUploadUrl' => 'null', // can not use, pre-resizing of images
+			// 'filebrowserUploadUrl' => 'null', // can not use, pre-resizing of images
 
 			/* URLs will be parsed with createUrl() */
 			'filebrowserBrowseCreateUrl'		=> array('/p3media/ckeditor'),
 			'filebrowserImageBrowseCreateUrl'	=> array('/p3media/ckeditor/image'),
 			'filebrowserFlashBrowseCreateUrl'	=> array('/p3media/ckeditor/flash'),
+			
+			'filebrowserUploadCreateUrl' => array('/p3media/import/upload'), // TODO (tbd)
+			
 		),
 	),
 )
