@@ -11,18 +11,19 @@ return array(
 			/* Toolbar */
 			'toolbar_Custom' => array(
 				array('Templates', '-', 'Maximize', 'Source', 'ShowBlocks', '-', 'Undo', 'Redo', '-', 'PasteText', 'PasteFromWord'),
-				array('JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'NumberedList', 'BulletedList', 'Outdent', 'Indent'),
-				array('Table', 'Blockquote', 'CreateDiv'),
+				array('JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', 'NumberedList', 'BulletedList','-','BidiLtr','BidiRtl'),
+				array('Table', 'Blockquote'),
 				'/',
 				array('Image', 'Flash', '-', 'Link', 'Unlink'),
 				array('Bold', 'Italic', 'Underline', '-', 'UnorderedList', 'OrderedList', '-', 'RemoveFormat'),
-				array('Format', '-', 'Styles')),
+				array('CreateDiv','Format', 'Styles')),
 			'toolbar' => "Custom",
 			/* Settings */
 			'startupOutlineBlocks' => true,
 			'pasteFromWordRemoveStyle' => true,
 			'pasteFromWordKeepsStructure' => true,
 			'templates_replaceContent' => false,
+			#'ignoreEmptyParagraph' => false,
 			#'forcePasteAsPlainText' => true,
 			'contentsCss' => '/css/ckeditor/ckeditor.css',
 			'bodyId' => 'ckeditor',
