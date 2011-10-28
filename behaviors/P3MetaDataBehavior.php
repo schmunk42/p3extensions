@@ -77,6 +77,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 			$metaModel->language = Yii::app()->language;
 			$metaModel->owner = Yii::app()->user->id;
 			$primaryRole = key(Yii::app()->authManager->getRoles(Yii::app()->user->id));
+			$metaModel->checkAccessUpdate = $primaryRole;
 			$metaModel->checkAccessDelete = $primaryRole;
 			$metaModel->createdAt = date('Y-m-d H:i:s');
 			$metaModel->createdBy = Yii::app()->user->id;
