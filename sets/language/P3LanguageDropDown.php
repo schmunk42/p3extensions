@@ -35,9 +35,13 @@ class P3LanguageDropDown extends CWidget {
         $select = Yii::app()->language;
         $data = $this->languages;        
         
-        if(!is_array($data)){
-            $data = array("Application parameter 'languages' missing");
-        }
+		if(!isset($data[$select])) {
+			$data[$select] = "*".Yii::app()->language;
+		}
+		
+        #if(!is_array($data)){
+         #   $data = array("Application parameter 'languages' missing");
+        #}
         
         $htmlOptions = array('id' => uniqid(get_class()), 'submit'=>'');
 
