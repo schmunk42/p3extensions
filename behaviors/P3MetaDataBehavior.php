@@ -43,7 +43,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 				throw new CHttpException(403, "You are not authorized to perform this action. Access restricted by P3MetaDataBehavior.");
 				return false;
 			} else {
-				$this->resolveMetaDataModel()->delete();
+				if ($this->metaDataRelation !== "_self_")
+					$this->resolveMetaDataModel()->delete();
 			}
 		}
 		return true;
