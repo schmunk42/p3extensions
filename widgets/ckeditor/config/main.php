@@ -22,7 +22,7 @@ return array(
 			'startupOutlineBlocks' => true,
 			'pasteFromWordRemoveStyle' => true,
 			'pasteFromWordKeepsStructure' => true,
-			'templates_replaceContent' => false,
+			'templates_replaceContent' => true,
 			#'ignoreEmptyParagraph' => false,
 			#'forcePasteAsPlainText' => true,
 			'contentsCss' => '/css/ckeditor/ckeditor.css',
