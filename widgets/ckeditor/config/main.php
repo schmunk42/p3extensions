@@ -1,5 +1,5 @@
 <?php
-
+$_baseDir = (dirname($_SERVER['SCRIPT_NAME']) != '/')?dirname($_SERVER['SCRIPT_NAME']):'';
 return array(
 	'params' => array(
 		'ext.ckeditor.options' => array(
@@ -25,13 +25,13 @@ return array(
 			'templates_replaceContent' => true,
 			#'ignoreEmptyParagraph' => false,
 			#'forcePasteAsPlainText' => true,
-			'contentsCss' => '/css/ckeditor/ckeditor.css',
+			'contentsCss' => $_baseDir.'/css/ckeditor/ckeditor.css',
 			'bodyId' => 'ckeditor',
 			'bodyClass' => 'ckeditor',
 			/* Assets will be published with publishAsset() */
 			
-			'templates_files' => array('/css/ckeditor/cktemplates.js'),
-			'stylesCombo_stylesSet' => 'my_styles:/css/ckeditor/ckstyles.js',
+			'templates_files' => array($_baseDir.'/css/ckeditor/cktemplates.js'),
+			'stylesCombo_stylesSet' => 'my_styles:'.$_baseDir.'/css/ckeditor/ckstyles.js',
 			
 			/* Standard-way to specify URLs - deprecated */
 			/*'filebrowserBrowseUrl' => '/p3media/ckeditor',
