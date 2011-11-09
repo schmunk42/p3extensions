@@ -4,6 +4,7 @@ class P3RsyncCommand extends CConsoleCommand
 {
     public $servers;
     public $aliases;
+	public $params;
     
     public function getHelp() {
         echo <<<EOS
@@ -57,7 +58,7 @@ EOS;
 
         echo "Start rsync of '".$alias."' (".$relativePath.") from '".$src."' to '".$dest."'? [Yes|No] ";
         if(!strncasecmp(trim(fgets(STDIN)),'y',1)) {
-            $cmd = "rsync -av ".$srcUrl." ".$destUrl;
+            $cmd = "rsync {$this->params} -av ".$srcUrl." ".$destUrl;
             echo "\n".$cmd."\n";
             system($cmd, $output);
         } else {
