@@ -1,3 +1,3 @@
 [submodule "widgets/jquery-file-upload/vendor"]
 	path = widgets/jquery-file-upload/vendor
-	url = git://github.com/schmunk42/jQuery-File-Upload.git
+	url = https://github.com/schmunk42/jQuery-File-Upload.git
