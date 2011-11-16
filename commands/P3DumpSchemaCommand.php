@@ -79,7 +79,7 @@ class P3DumpSchemaCommand extends CConsoleCommand {
 		foreach ($data AS $row) {
 			$code .= '$this->insert("' . $table->name . '", array(' . "\n";
 			foreach ($row AS $column => $value) {
-				$code .= '    "' . $column . '"=>' . (($value === null) ? 'null' : '"' . $value . '"') . ',' . "\n";
+				$code .= '    "' . $column . '"=>' . (($value === null) ? 'null' : '"' . addslashes($value) . '"') . ',' . "\n";
 			}
 			$code .= ') );' . "\n\n";
 		}
