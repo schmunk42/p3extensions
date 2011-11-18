@@ -13,8 +13,8 @@
  *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @version $Id: P2BlogWidget.php 371 2010-02-04 01:51:13Z schmunk $
- * @package extensions.langhandler
- * @since 2.0
+ * @package p3extensions.language
+ * @since 3.0
  */
 class P3LangUrlManager extends CUrlManager {
     
