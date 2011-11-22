@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Class file
+ */
+
+/**
+ * <pre>
+ * 'Translation' => array(
+ *   'class' => 'ext.p3extensions.behaviors.P3TranslationBehavior',
+ *   'relation' => 'daContentTranslations',
+ *   'fallbackLanguage' => 'de_de'
+ * )
+ * </pre>
+ */
 class P3TranslationBehavior extends CActiveRecordBehavior {
 
 	/**
@@ -33,8 +46,8 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 			return $models[$language]->$attr;
 		} else if (isset($models[$this->fallbackLanguage])) {
 			// fallback model
-			return $models[$this->fallbackLanguage]->$attr."*";
-		} else if ($fallback === true) {		
+			return $models[$this->fallbackLanguage]->$attr . "*";
+		} else if ($fallback === true) {
 			// return string if there's no value, but fallback in on
 			return "not yet translated**";
 		} else {
