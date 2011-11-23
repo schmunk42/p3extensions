@@ -7,6 +7,9 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 	 * @var string
 	 */
 	public $metaDataRelation;
+	public $contentRelation;
+	public $parentRelation;
+	public $childrenRelation;
 
 	const STATUS_DELETED = 0;
 	const STATUS_DRAFT = 10;
@@ -36,7 +39,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 		}
 	}
 
-	public function beforeDelete($event) {		
+	public function beforeDelete($event) {
 		parent::beforeDelete($event);
 		if ($this->resolveMetaDataModel() !== null) {
 			if ($this->resolveMetaDataModel()->checkAccessDelete && Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessDelete) === false) {
@@ -83,7 +86,6 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 			$metaModel->createdAt = date('Y-m-d H:i:s');
 			$metaModel->createdBy = Yii::app()->user->id;
 			$metaModel->model = get_class($this->owner);
-			
 		} else {
 			$metaModel = $this->resolveMetaDataModel();
 			$metaModel->modifiedAt = date('Y-m-d H:i:s');
@@ -91,6 +93,21 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 		}
 		$metaModel->save();
 		return true;
+	}
+
+	public function getChildren() {
+		$return = array();
+		$children = $this->resolveMetaDataModel()->{$this->childrenRelation};
+		if ($children !== array()) {
+			foreach($children AS $metaModel) {
+				$return[] = $metaModel->{$this->contentRelation};
+			}
+		}
+		return $return;
+	}
+
+	public function getParent() {
+		return $this->resolveMetaDataModel()->{$this->parentRelation}->{$this->contentRelation};
 	}
 
 }
