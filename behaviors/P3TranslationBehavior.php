@@ -22,6 +22,8 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 	 */
 	public $relation;
 	public $fallbackLanguage;
+	public $attributesBlacklist = array();
+	#public $attributesWhitelist = array();
 
 	public function t($name, $language = null, $fallback = false) {
 		if ($language === null) {
@@ -40,14 +42,13 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 		foreach ($this->owner->getRelated($this->relation) AS $translationModel) {
 			$models[$translationModel->language] = $translationModel;
 		}
-
 		if (isset($models[$language])) {
 			// desired model
 			return $models[$language]->$attr;
-		} else if (isset($models[$this->fallbackLanguage])) {
+		} else if ($fallback === true && isset($models[$this->fallbackLanguage])) {
 			// fallback model
 			return $models[$this->fallbackLanguage]->$attr . "*";
-		} else if ($fallback === true) {
+		} else if ($fallback === true && !in_array($attr, $this->attributesBlacklist)) {
 			// return string if there's no value, but fallback in on
 			return "not yet translated**";
 		} else {
