@@ -19,9 +19,8 @@
  * {@link DefaultController}
  *
  * @author Tobias Munk <schmunk@usrbin.de>
- * @version $Id: P2ActiveRecordFileUploadBehavior.php 511 2010-03-24 00:41:52Z schmunk $
- * @package p3.behaviors
- * @since 3.0
+ * @package p3extensions.behaviors
+ * @since 3.0.1
  */
 class P3FileUploadBehavior extends CActiveRecordBehavior {
 	const TRASH_FOLDER = 'trash';

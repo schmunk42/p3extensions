@@ -19,8 +19,8 @@
  *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @version $Id: P2LanguageDropDown.php 506 2010-03-24 00:32:15Z schmunk $
- * @package p2.widgets
- * @since 2.0
+ * @package p3extensions.language
+ * @since 3.0
  */
 class P3LanguageDropDown extends CWidget {
 
