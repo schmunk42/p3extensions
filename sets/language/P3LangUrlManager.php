@@ -23,7 +23,7 @@ class P3LangUrlManager extends CUrlManager {
         if (isset($params['lang']) && $params['lang'] == "__EMPTY__") {
             unset($params['lang']);
         } elseif (!isset($params['lang'])) {
-            $params['lang']=Yii::app()->GetLanguage();
+            array_unshift($params, Yii::app()->GetLanguage());
         }
         return parent::createUrl($route, $params, $ampersand);
     }
