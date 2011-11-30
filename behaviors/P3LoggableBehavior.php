@@ -22,7 +22,7 @@
  * @package p2.behaviors
  * @since 2.0
  */
-class P2ActiveRecordLogableBehavior extends CActiveRecordBehavior {
+class P3LoggableBehavior extends CActiveRecordBehavior {
     private $_oldattributes = array();
 
     public function afterSave($event) {

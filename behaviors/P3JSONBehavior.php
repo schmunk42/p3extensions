@@ -22,7 +22,7 @@
  * @package p2.behaviors
  * @since 2.0
  */
-class P2ActiveRecordJSONBehavior extends CActiveRecordBehavior {
+class P3JSONBehavior extends CActiveRecordBehavior {
 
     public function beforeSave($event) {
         foreach($this->Owner->attributes AS $key => $value) {

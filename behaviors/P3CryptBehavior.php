@@ -19,10 +19,10 @@
  *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @version $Id: P2ActiveRecordJSONBehavior.php 511 2010-03-24 00:41:52Z schmunk $
- * @package p2.behaviors
- * @since 2.0
+ * @package p3extensions.behaviors
+ * @since 3.0.3
  */
-class P2ActiveRecordCryptBehavior extends CActiveRecordBehavior {
+class P2CryptBehavior extends CActiveRecordBehavior {
 
     public $attributes = array();
 
