@@ -10,21 +10,19 @@
 
 /**
  * Behavior, encrypts given attributes with CSecurityManager
- *
- * Detailed info
- * <pre>
- * $var = code_example();
- * </pre>
- * {@link DefaultController}
- *
+ * 
  * @author Tobias Munk <schmunk@usrbin.de>
- * @version $Id: P2ActiveRecordJSONBehavior.php 511 2010-03-24 00:41:52Z schmunk $
  * @package p3extensions.behaviors
  * @since 3.0.3
  */
 class P2CryptBehavior extends CActiveRecordBehavior {
 
-    public $attributes = array();
+    /**
+	 * Attributes which should be crypted
+	 * 
+	 * @var type array
+	 */
+	public $attributes = array();
 
     public function beforeSave($event) {
 

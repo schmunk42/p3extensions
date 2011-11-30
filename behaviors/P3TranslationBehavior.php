@@ -1,10 +1,16 @@
 <?php
-
 /**
- * Class file
+ * Class file.
+ *
+ * @author Tobias Munk <schmunk@usrbin.de>
+ * @link http://www.phundament.com/
+ * @copyright Copyright &copy; 2005-2011 diemeisterei GmbH
+ * @license http://www.phundament.com/license/
  */
 
 /**
+ * Provides a translation for attributes in the specified relation
+ * 
  * <pre>
  * 'Translation' => array(
  *   'class' => 'ext.p3extensions.behaviors.P3TranslationBehavior',
@@ -12,7 +18,12 @@
  *   'fallbackLanguage' => 'de_de'
  * )
  * </pre>
+ *
+ * @author Tobias Munk <schmunk@usrbin.de>
+ * @package p3extensions.behaviors
+ * @since 3.0.3
  */
+
 class P3TranslationBehavior extends CActiveRecordBehavior {
 
 	/**
@@ -21,10 +32,25 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 	 * @var string
 	 */
 	public $relation;
+	/**
+	 * Language to use if preferred language is not found
+	 * @var type 
+	 */
 	public $fallbackLanguage;
+	/**
+	 * Attributes which should not be translated
+	 * @var type 
+	 */
 	public $attributesBlacklist = array();
 	#public $attributesWhitelist = array();
-
+	
+	/**
+	 * Tranlates attribute
+	 * @param type $name attribute to translate
+	 * @param type $language preferred language
+	 * @param type $fallback fallback language
+	 * @return mixed
+	 */
 	public function t($name, $language = null, $fallback = false) {
 		if ($language === null) {
 			$language = Yii::app()->language;

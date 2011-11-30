@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class File
  *
@@ -11,12 +10,9 @@
 
 /**
  * Behavior, handles file uploads
- *
- * Detailed info
- * <pre>
- * $var = code_example();
- * </pre>
- * {@link DefaultController}
+ * 
+ * Note: This behavior currently requires a set of fixed attribute names within
+ * the model (path, mimeType, title, size, originalName, md5).
  *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @package p3extensions.behaviors
@@ -26,9 +22,21 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 	const TRASH_FOLDER = 'trash';
 
 	public $uploadInstance;
+	/**
+	 * Yii path alias, where to store files
+	 * @var type string
+	 */
 	public $dataAlias;
-	public $trashAlias;
+	/**
+	 * Subdirectory for uploaded files (e.g. user directories)
+	 * @var type string
+	 */
 	public $dataSubdirectory;
+	/**
+	 * Yii path alias, where to move delted files
+	 * @var type string
+	 */
+	public $trashAlias;
 	
 	private $_baseDataPath;
 	private $_fullDataPath;
@@ -36,6 +44,12 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 	private $_trashPath;
 	private $_fileToDelete;
 
+	/**
+	 * Stores file in appropriate directory and updates owner record with info
+	 * about the file.
+	 * 
+	 * @param type $event 
+	 */
 	public function afterValidate($event) {
 
 		$this->prepareDataDirectory();
@@ -70,7 +84,7 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 			}
 		}
 	}
-
+	
 	public function beforeDelete($event) {
 		$this->_fileToDelete = $this->Owner->path;
 	}
@@ -79,6 +93,7 @@ class P3FileUploadBehavior extends CActiveRecordBehavior {
 		$this->prepareDataDirectory();
 		$this->deleteFile($this->_fileToDelete);
 	}
+	
 	
 	private function deleteFile($path) {
 		$fileToDelete = $this->_baseDataPath . DIRECTORY_SEPARATOR . $path;
