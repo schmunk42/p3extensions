@@ -9,12 +9,13 @@
  */
 
 /**
- * Application component
+ * Url manager, creates URLs with 'lang' param
+ * 
+ * @see P3LangHandler
  *
  * @author Tobias Munk <schmunk@usrbin.de>
- * @version $Id: P2BlogWidget.php 371 2010-02-04 01:51:13Z schmunk $
- * @package p3extensions.language
- * @since 3.0
+ * @package p3extensions.components
+ * @since 3.0.3
  */
 class P3LangUrlManager extends CUrlManager {
     

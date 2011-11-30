@@ -11,7 +11,6 @@
 /**
  * Command to sync project files by alias between a server and your local machine
  * 
- * Based upon http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c2550 from Leric
  * 
  * @author Tobias Munk <schmunk@usrbin.de>
  * @package p3extensions.commands
@@ -19,8 +18,20 @@
  */
 class P3RsyncCommand extends CConsoleCommand
 {
-    public $servers;
+    /**
+	 * Array of available locations
+	 * @var type array
+	 */
+	public $servers;
+	/**
+	 * Yii aliases (directories) within the application which can be synced
+	 * @var type array
+	 */
     public $aliases;
+	/**
+	 * Additional rsync command line params
+	 * @var type string
+	 */
 	public $params;
     
     public function getHelp() {
@@ -48,7 +59,11 @@ Note: One server location has to be a local file path!
 EOS;
     }
     
-    public function run($args) {
+    /**
+	 * Syncs from 'server1' to 'server2' the 'alias'
+	 * @param type $args 
+	 */
+	public function run($args) {
         if (!isset($this->servers)) {
             echo "No server specified in config!";
             exit;

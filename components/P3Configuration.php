@@ -9,7 +9,8 @@
  */
 
 /**
- * Configuration helper, reads files or arrays, skips missing files without error
+ * Configuration helper, reads files or arrays, skips missing files without 
+ * throwing errors if file is not found
  * 
  * Based upon http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c2550 from Leric
  * 
