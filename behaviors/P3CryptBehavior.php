@@ -15,7 +15,7 @@
  * @package p3extensions.behaviors
  * @since 3.0.3
  */
-class P2CryptBehavior extends CActiveRecordBehavior {
+class P3CryptBehavior extends CActiveRecordBehavior {
 
     /**
 	 * Attributes which should be crypted
