@@ -9,9 +9,12 @@
  */
 
 /**
- * Commponent ...
+ * Set the current page as the return url if it gets initialized
  * 
- * Based upon http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c2550 from Leric
+ * Commponent must be initialized (called) in a controller.
+ * <pre>
+ * Yii::app()->returnUrl;
+ * </pre>
  * 
  * @author Tobias Munk <schmunk@usrbin.de>
  * @package p3extensions.components
@@ -25,7 +28,7 @@ class P3ReturnUrl extends CApplicationComponent {
 		// TODO
 		$urlManager = Yii::createComponent('ext.p3extensions.sets.language.P3LangUrlManager');
 		
-		$loginUrl = $urlManager->createUrl(Yii::app()->user->loginUrl[0], array('lang'=>'de_de'));
+		$loginUrl = $urlManager->createUrl(Yii::app()->user->loginUrl[0]);
 		$requestUrl = Yii::app()->request->url;
 		
 		if ($requestUrl!=$loginUrl) {
