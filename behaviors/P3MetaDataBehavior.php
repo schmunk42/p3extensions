@@ -144,6 +144,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 			$metaModel->checkAccessDelete = $primaryRole;
 			$metaModel->createdAt = date('Y-m-d H:i:s');
 			$metaModel->createdBy = Yii::app()->user->id;
+			$metaModel->guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 			$metaModel->model = get_class($this->owner);
 		} else {
 			$metaModel = $this->resolveMetaDataModel();
