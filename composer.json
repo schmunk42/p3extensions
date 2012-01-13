@@ -1,0 +1,18 @@
+{
+    "name": "phundament/p3extensions",
+    "description": "Core Extensions",
+    "keywords": ["package", "dependency", "autoload"],
+    "homepage": "http://phundament.com/",
+    "type": "library",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Tobias Munk",
+            "email": "schmunk@usrbin.de",
+            "homepage": "http://www.usrbin.de"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+    }
+}
