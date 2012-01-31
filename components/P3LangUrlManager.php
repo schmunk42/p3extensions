@@ -9,12 +9,13 @@
  */
 
 /**
- * Application component
+ * Url manager, creates URLs with 'lang' param
+ * 
+ * @see P3LangHandler
  *
  * @author Tobias Munk <schmunk@usrbin.de>
- * @version $Id: P2BlogWidget.php 371 2010-02-04 01:51:13Z schmunk $
- * @package extensions.langhandler
- * @since 2.0
+ * @package p3extensions.components
+ * @since 3.0.3
  */
 class P3LangUrlManager extends CUrlManager {
     
@@ -23,7 +24,7 @@ class P3LangUrlManager extends CUrlManager {
         if (isset($params['lang']) && $params['lang'] == "__EMPTY__") {
             unset($params['lang']);
         } elseif (!isset($params['lang'])) {
-            $params['lang']=Yii::app()->GetLanguage();
+			$params = array_merge(array('lang' => Yii::app()->GetLanguage()), $params);
         }
         return parent::createUrl($route, $params, $ampersand);
     }

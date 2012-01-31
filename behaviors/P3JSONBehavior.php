@@ -9,20 +9,13 @@
  */
 
 /**
- * Behavior, converts arrays into JSON strings
- *
- * Detailed info
- * <pre>
- * $var = code_example();
- * </pre>
- * {@link DefaultController}
- *
+ * Behavior, converts arrays into JSON strings back and forth
+ * 
  * @author Tobias Munk <schmunk@usrbin.de>
- * @version $Id: P2ActiveRecordJSONBehavior.php 511 2010-03-24 00:41:52Z schmunk $
- * @package p2.behaviors
- * @since 2.0
+ * @package p3extensions.behaviors
+ * @since 3.0.3
  */
-class P2ActiveRecordJSONBehavior extends CActiveRecordBehavior {
+class P3JSONBehavior extends CActiveRecordBehavior {
 
     public function beforeSave($event) {
         foreach($this->Owner->attributes AS $key => $value) {

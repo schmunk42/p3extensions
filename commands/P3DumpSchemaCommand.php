@@ -1,8 +1,23 @@
 <?php
+/**
+ * Class file.
+ *
+ * @author Tobias Munk <schmunk@usrbin.de>
+ * @link http://www.phundament.com/
+ * @copyright Copyright &copy; 2005-2011 diemeisterei GmbH
+ * @license http://www.phundament.com/license/
+ */
 
 /**
+ * Command to dump databases into PHP code for migration classes
+ * 
  * Based upon http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c2550 from Leric
+ * 
+ * @author Tobias Munk <schmunk@usrbin.de>
+ * @package p3extensions.commands
+ * @since 3.0.1
  */
+
 class P3DumpSchemaCommand extends CConsoleCommand {
     
 	public function getHelp() {

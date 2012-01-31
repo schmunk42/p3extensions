@@ -1,9 +1,37 @@
 <?php 
+/**
+ * Class file.
+ *
+ * @author Tobias Munk <schmunk@usrbin.de>
+ * @link http://www.phundament.com/
+ * @copyright Copyright &copy; 2005-2011 diemeisterei GmbH
+ * @license http://www.phundament.com/license/
+ */
 
+/**
+ * Command to sync project files by alias between a server and your local machine
+ * 
+ * 
+ * @author Tobias Munk <schmunk@usrbin.de>
+ * @package p3extensions.commands
+ * @since 3.0.1
+ */
 class P3RsyncCommand extends CConsoleCommand
 {
-    public $servers;
+    /**
+	 * Array of available locations
+	 * @var type array
+	 */
+	public $servers;
+	/**
+	 * Yii aliases (directories) within the application which can be synced
+	 * @var type array
+	 */
     public $aliases;
+	/**
+	 * Additional rsync command line params
+	 * @var type string
+	 */
 	public $params;
     
     public function getHelp() {
@@ -31,7 +59,11 @@ Note: One server location has to be a local file path!
 EOS;
     }
     
-    public function run($args) {
+    /**
+	 * Syncs from 'server1' to 'server2' the 'alias'
+	 * @param type $args 
+	 */
+	public function run($args) {
         if (!isset($this->servers)) {
             echo "No server specified in config!";
             exit;
