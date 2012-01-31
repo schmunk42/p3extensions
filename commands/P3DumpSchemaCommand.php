@@ -4,10 +4,25 @@
  * Based upon http://www.yiiframework.com/doc/guide/1.1/en/database.migration#c2550 from Leric
  */
 class P3DumpSchemaCommand extends CConsoleCommand {
+    
+	public function getHelp() {
+        echo <<<EOS
+Usage: yiic p3dumpschema <schema> <table_prefix>
 
+EOS;
+    }
+	
 	public function run($args) {
+		
+		if (!isset($args[1])) {
+			$this->getHelp();
+			exit;
+		}
+		
 		$schema = $args[0];
 		$prefix = $args[1];
+		
+		
 		$tables = Yii::app()->db->schema->getTables($schema);
 		$code = '';
 		$code .= "if (Yii::app()->db->schema instanceof CMysqlSchema)\n";
@@ -30,7 +45,17 @@ class P3DumpSchemaCommand extends CConsoleCommand {
 			$code .= "\n\n\n// Data for table '" . $table->name . "'\n\n";
 			$code .= $this->generateInserts($table, $schema);
 		}
-		echo $code;
+		
+		$migrationClassName = 'm'.date('ymd_His')."_dump";
+		$filename = Yii::app()->basePath.DIRECTORY_SEPARATOR.'runtime'.DIRECTORY_SEPARATOR.$migrationClassName.".php";
+		$migrationClassCode = $this->renderFile(
+			dirname(__FILE__).'/views/migration.php', 
+			array('migrationClassName' => $migrationClassName, 'functionUp'=>$code), 
+			true);
+		
+		file_put_contents($filename, $migrationClassCode);
+		
+		echo "Your schema has been dumped to '$filename'\n";
 	}
 
 	private function generateSchema($table, $schema) {
