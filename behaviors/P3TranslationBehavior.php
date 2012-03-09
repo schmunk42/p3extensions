@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class file.
  *
@@ -23,7 +24,6 @@
  * @package p3extensions.behaviors
  * @since 3.0.3
  */
-
 class P3TranslationBehavior extends CActiveRecordBehavior {
 
 	/**
@@ -32,18 +32,27 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 	 * @var string
 	 */
 	public $relation;
+
 	/**
 	 * Language to use if preferred language is not found
 	 * @var type 
 	 */
 	public $fallbackLanguage;
+
+	/**
+	 * Value to use if preferred value from language is not found
+	 * @var type 
+	 */
+	public $fallbackValue = "not yet translated**";
+
 	/**
 	 * Attributes which should not be translated
 	 * @var type 
 	 */
 	public $attributesBlacklist = array();
+
 	#public $attributesWhitelist = array();
-	
+
 	/**
 	 * Tranlates attribute
 	 * @param type $name attribute to translate
@@ -63,6 +72,24 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 		}
 	}
 
+	public function getTranslationModel($language = null) {
+		if ($language === null) {
+			$language = Yii::app()->language;
+		}
+		// parse models into array
+		$models = array();
+		foreach ($this->owner->getRelated($this->relation) AS $translationModel) {
+			$models[$translationModel->language] = $translationModel;
+		}
+
+		if (isset($models[$language])) {
+			// desired model
+			return $models[$language];
+		} else {
+			return null;
+		}
+	}
+
 	private function resolveTranslation($language, $attr, $fallback) {
 		// parse models into array
 		$models = array();
@@ -75,10 +102,10 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 			return $models[$language]->$attr;
 		} else if ($fallback === true && isset($models[$this->fallbackLanguage])) {
 			// fallback model
-			return $models[$this->fallbackLanguage]->$attr;# . "*";
+			return $models[$this->fallbackLanguage]->$attr; # . "*";
 		} else if ($fallback === true && !in_array($attr, $this->attributesBlacklist)) {
 			// return string if there's no value, but fallback in on
-			return "not yet translated**";
+			return $this->fallbackValue;
 		} else {
 			return null;
 		}
@@ -87,13 +114,13 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 	private function hasTranslationAttribute($attr) {
 		$relations = $this->owner->relations();
 		$model = new $relations[$this->relation][1];
-		
+
 		// check relations
 		$modelRelations = $model->relations();
 		if (isset($modelRelations[$attr])) {
 			return true;
 		}
-		
+
 		return ($model->hasAttribute($attr));
 	}
 
