@@ -137,7 +137,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 			$metaModel = new $metaClassName;
 			$metaModel->id = $this->owner->id;
 			$metaModel->status = self::STATUS_ACTIVE;
-			$metaModel->language = Yii::app()->language;
+			//$metaModel->language = Yii::app()->language;
+			$metaModel->language = '_ALL';
 			$metaModel->owner = Yii::app()->user->id;
 			$primaryRole = key(Yii::app()->authManager->getRoles(Yii::app()->user->id));
 			$metaModel->checkAccessUpdate = $primaryRole;
