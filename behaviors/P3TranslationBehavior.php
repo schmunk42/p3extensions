@@ -40,7 +40,7 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 	public $fallbackLanguage;
 
 	/**
-	 * Value to use if preferred value from language is not found
+	 * Value to use if fallback value from language is not found
 	 * @var type 
 	 */
 	public $fallbackValue = "not yet translated**";
