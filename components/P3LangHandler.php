@@ -36,6 +36,9 @@ class P3LangHandler extends CApplicationComponent {
 	 * Handles language detection and application setting by URL parm specified in DATA_KEY
 	 */
 	public function init() {
+		// parsing needed if urlFormat 'path'
+		Yii::app()->urlManager->parseUrl(Yii::app()->getRequest());
+		
 		if (!isset($_GET[self::DATA_KEY])) {
 			$preferred = Yii::app()->getRequest()->getPreferredLanguage();
 			if (in_array($preferred, $this->languages)) {
