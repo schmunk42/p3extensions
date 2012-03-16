@@ -119,7 +119,7 @@ EOS;
 		foreach ($data AS $row) {
 			$code .= '$this->insert("' . $table->name . '", array(' . "\n";
 			foreach ($row AS $column => $value) {
-				$code .= '    "' . $column . '"=>' . (($value === null) ? 'null' : '"' . addslashes($value) . '"') . ',' . "\n";
+				$code .= '    "' . $column . '"=>' . (($value === null) ? 'null' : '"' . str_replace('"','\"',$value) . '"') . ',' . "\n";
 			}
 			$code .= ') );' . "\n\n";
 		}
