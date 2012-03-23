@@ -14,7 +14,7 @@
  * 
  * <pre>
  * 'Translation' => array(
- *   'class' => 'ext.p3extensions.behaviors.P3TranslationBehavior',
+ *   'class' => 'ext.phundament.p3extensions.behaviors.P3TranslationBehavior',
  *   'relation' => 'daContentTranslations',
  *   'fallbackLanguage' => 'de_de'
  * )

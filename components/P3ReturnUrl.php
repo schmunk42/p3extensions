@@ -26,7 +26,7 @@ class P3ReturnUrl extends CApplicationComponent {
 		parent::init();
 		
 		// TODO
-		$urlManager = Yii::createComponent('ext.p3extensions.sets.language.P3LangUrlManager');
+		$urlManager = Yii::createComponent('ext.phundament.p3extensions.sets.language.P3LangUrlManager');
 		
 		$loginUrl = $urlManager->createUrl(Yii::app()->user->loginUrl[0]);
 		$requestUrl = Yii::app()->request->url;
