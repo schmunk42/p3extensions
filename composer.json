@@ -1,5 +1,5 @@
 {
-    "name": "p3extensions",
+    "name": "phundament/p3extensions",
     "description": "Core Extensions",
     "keywords": ["package", "dependency", "autoload"],
     "homepage": "http://phundament.com/",
