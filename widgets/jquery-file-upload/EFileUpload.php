@@ -14,7 +14,7 @@ class EFileUpload extends CWidget {
 	}
 
 	private function registerClientScripts(){
-		$assetsPath = dirname(__FILE__).DIRECTORY_SEPARATOR.'vendor';
+		$assetsPath = Yii::getPathOfAlias('ext.phundament.jquery-file-upload');
 
 		$cs = Yii::app()->clientScript;
 		$am = Yii::app()->assetManager;
@@ -32,7 +32,7 @@ class EFileUpload extends CWidget {
 		if ($this->initJs !== null) {
 			$cs->registerScriptFile($this->initJs, CClientScript::POS_END);
 		} else {
-			$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'init.js'), CClientScript::POS_END);
+			$cs->registerScriptFile($am->publish(dirname(__FILE__).DIRECTORY_SEPARATOR.'init.js'), CClientScript::POS_END);
 		}
 		
 	}
