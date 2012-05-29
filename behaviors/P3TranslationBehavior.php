@@ -111,7 +111,7 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 		}
 	}
 
-	private function hasTranslationAttribute($attr) {
+	public function hasTranslationAttribute($attr) {
 		$relations = $this->owner->relations();
 		$model = new $relations[$this->relation][1];
 
