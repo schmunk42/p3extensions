@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Class file.
  *
@@ -10,8 +10,8 @@
 
 /**
  * Command to sync project files by alias between a server and your local machine
- * 
- * 
+ *
+ *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @package p3extensions.commands
  * @since 3.0.1
@@ -33,12 +33,12 @@ class P3RsyncCommand extends CConsoleCommand
 	 * @var type string
 	 */
 	public $params;
-    
+
     public function getHelp() {
         echo <<<EOS
 Usage: yiic rsync <server:src> <server:dest> <alias>
 
-Specify the shorthands in config/console.php, make sure the 
+Specify the shorthands in config/console.php, make sure the
 URLs point to the yii webapp directory (usually 'protected').
 
 'commandMap' => array(
@@ -58,22 +58,22 @@ Note: One server location has to be a local file path!
 
 EOS;
     }
-    
+
     /**
 	 * Syncs from 'server1' to 'server2' the 'alias'
-	 * @param type $args 
+	 * @param type $args
 	 */
 	public function run($args) {
         if (!isset($this->servers)) {
             echo "No server specified in config!";
             exit;
         }
-        
+
         if (!isset($this->aliases)) {
             echo "No alias defined in config!";
             exit;
         }
-                
+
         if (!isset($args[2])) {
             $this->getHelp();
             exit;
@@ -81,10 +81,10 @@ EOS;
         $src = $args[0];
         $dest = $args[1];
         $alias = $args[2];
-        
+
         $path = Yii::getPathOfAlias($this->aliases[$alias]);
         $relativePath = str_replace(Yii::app()->basePath,"",$path);
-        
+
         $srcUrl = $this->servers[$src].$relativePath."/";
         $destUrl = $this->servers[$dest].$relativePath."/";
 
@@ -97,7 +97,7 @@ EOS;
             echo "Skipped.\n";
         }
     }
-    
+
 }
 
 ?>
