@@ -11,7 +11,7 @@
 
 /**
  * Meta Data behavior
- * 
+ *
  * Handles meta data attributes such as
  * <ul>
  * <li>
@@ -25,14 +25,14 @@
  * modifiedBy
  * </lI>
  * <ul>
- * 
- * Handles record based permissions 
+ *
+ * Handles record based permissions
  * checkAccessUpdate
  * checkAccessDelete
- * 
+ *
  * Handles parent-child relationship between records
- * 
- * 
+ *
+ *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @package p3extensions.behaviors
  * @since 3.0.1
@@ -51,12 +51,12 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 	public $contentRelation;
 	/**
 	 * Name of the internal meta data parent(-child) relation
-	 * @var type 
+	 * @var type
 	 */
 	public $parentRelation;
 	/**
 	 * Name of the internal meta data (parent-)child relation
-	 * @var type 
+	 * @var type
 	 */
 	public $childrenRelation;
 
@@ -82,11 +82,11 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 	public function getParent() {
 		return $this->resolveMetaDataModel()->{$this->parentRelation}->{$this->contentRelation};
 	}
-	
+
 	/**
 	 * Checks permissions in attribute checkAccessDelete
 	 * @param type $event
-	 * @return type 
+	 * @return type
 	 */
 	public function beforeDelete($event) {
 		parent::beforeDelete($event);
@@ -101,14 +101,22 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks permissions in attribute checkAccessUpdate
 	 * @param type $event
-	 * @return type 
+	 * @return type
 	 */
 	public function beforeSave($event) {
 		parent::beforeSave($event);
+
+
+        // exist in console app - no automatic saving
+        if (Yii::app() instanceof CConsoleApplication) {
+            Yii::log('Meta Data behavior omitted in console application.', CLogger::LEVEL_INFO);
+            return true;
+        }
+
 		if ($this->resolveMetaDataModel() !== null && $this->resolveMetaDataModel()->checkAccessUpdate) {
 			if (Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessUpdate) === false) {
 				throw new CHttpException(403, "You are not authorized to perform this action. Access restricted by P3MetaDataBehavior.");
@@ -117,11 +125,11 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Creates meta data for new records or updates modified attributes when saving
 	 * @param type $event
-	 * @return type 
+	 * @return type
 	 */
 	public function afterSave($event) {
 		parent::afterSave($event);
@@ -130,6 +138,12 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 		if ($this->metaDataRelation == '_self_') {
 			return true;
 		}
+
+        // exist in console app - no automatic saving
+        if (Yii::app() instanceof CConsoleApplication) {
+            Yii::log('Meta Data behavior omitted in console application.', CLogger::LEVEL_INFO);
+            return true;
+        }
 
 		// create new meta data record or just update modifiedBy/At columns
 		if ($this->resolveMetaDataModel() === null) {
