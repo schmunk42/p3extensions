@@ -11,7 +11,7 @@
 
 /**
  * Provides a translation for attributes in the specified relation
- * 
+ *
  * <pre>
  * 'Translation' => array(
  *   'class' => 'ext.phundament.p3extensions.behaviors.P3TranslationBehavior',
@@ -35,19 +35,26 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 
 	/**
 	 * Language to use if preferred language is not found
-	 * @var type 
+	 * @var type
 	 */
 	public $fallbackLanguage;
 
 	/**
 	 * Value to use if fallback value from language is not found
-	 * @var type 
+	 * @var type
+	 */
+	public $fallbackIndicator = null;
+
+    /**
+	 * Value to use if fallback value from language is not found
+	 * @var type
 	 */
 	public $fallbackValue = "not yet translated**";
 
+
 	/**
 	 * Attributes which should not be translated
-	 * @var type 
+	 * @var type
 	 */
 	public $attributesBlacklist = array();
 
@@ -102,7 +109,7 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 			return $models[$language]->$attr;
 		} else if ($fallback === true && isset($models[$this->fallbackLanguage])) {
 			// fallback model
-			return $models[$this->fallbackLanguage]->$attr; # . "*";
+			return $models[$this->fallbackLanguage]->$attr.$this->fallbackIndicator[$attr];
 		} else if ($fallback === true && !in_array($attr, $this->attributesBlacklist)) {
 			// return string if there's no value, but fallback in on
 			return $this->fallbackValue;
