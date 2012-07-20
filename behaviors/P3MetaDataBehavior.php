@@ -73,7 +73,12 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 
     public function getChildren() {
         $return = array();
-        $children = $this->resolveMetaDataModel()->{$this->childrenRelation};
+        $model = $this->resolveMetaDataModel();
+        if ($model === null) {
+            Yii::log('Record #'.$this->owner->id.' has no Meta Data model.');
+            return array();
+        }
+        $children = $model->{$this->childrenRelation};
         if ($children !== array()) {
             foreach ($children AS $metaModel) {
                 if ($this->metaDataRelation == '_self_') {
