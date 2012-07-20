@@ -73,12 +73,17 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 
     public function getChildren() {
         $return = array();
+
+        // TODO .... datacheck
         $model = $this->resolveMetaDataModel();
         if ($model === null) {
-            Yii::log('Record #'.$this->owner->id.' has no Meta Data model.');
+            Yii::log('Record #' . $this->owner->id . ' has no Meta Data model.');
             return array();
         }
-        $children = $model->{$this->childrenRelation};
+
+        //$children = $model->{$this->childrenRelation}; # DISABLED - beforeFind does not get applied in relations
+        $children = $model->findAllByAttributes(array('treeParent_id' => $this->owner->id));
+
         if ($children !== array()) {
             foreach ($children AS $metaModel) {
                 if ($this->metaDataRelation == '_self_') {
@@ -92,7 +97,17 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
     }
 
     public function getParent() {
-        return $this->resolveMetaDataModel()->{$this->parentRelation}->{$this->contentRelation};
+        $model = $this->resolveMetaDataModel();
+        return $model->findAllByAttributes(array('id' => $this->owner->{$this->metaDataRelation}->treeParent_id));
+
+    }
+
+    public function beforeFind($event) {
+        parent::beforeFind($event);
+        //echo get_class($this->owner);
+        $criteria = $this->createReadAccessCriteria();
+        $this->owner->applyScopes($criteria);
+        $this->owner->setDbCriteria($criteria);
     }
 
     /**
@@ -121,7 +136,6 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
      */
     public function beforeSave($event) {
         parent::beforeSave($event);
-
 
         // exist in console app - no automatic saving
         if (Yii::app() instanceof CConsoleApplication) {
@@ -182,6 +196,11 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
         return true;
     }
 
+    /**
+     * Finds meta data model from settings
+     * @return type
+     * @throws CException
+     */
     private function resolveMetaDataModel() {
         if (!$this->metaDataRelation) {
             throw new CException("Attribute 'metaDataRelation' for model '" . get_class($this->owner) . "' not set.");
@@ -200,6 +219,30 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
             // manual setting
             return $this->owner->{$this->metaDataRelation};
         }
+    }
+
+    /**
+     *Creates a CDbCriteria with restrics read access by meta data settings
+     * @return \CDbCriteria
+     */
+    private function createReadAccessCriteria() {
+        $criteria = new CDbCriteria;
+
+        // do not apply filter for superuser
+        if (!Yii::app()->user->isSuperuser) {
+            if ($this->owner->metaDataRelation != "_self_") {
+                $criteria->with = $this->owner->metaDataRelation;
+            }
+
+            $checkAccessRoles = "";
+            if (!Yii::app()->user->isGuest) {
+                foreach (Yii::app()->authManager->getRoles(Yii::app()->user->id) AS $role) {
+                    $checkAccessRoles .= "checkAccessRead = '" . $role->name . "' OR ";
+                }
+            }
+            $criteria->condition = $checkAccessRoles . " " . "checkAccessRead IS NULL";
+        }
+        return $criteria;
     }
 
 }
