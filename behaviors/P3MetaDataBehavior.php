@@ -82,7 +82,10 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
         }
 
         //$children = $model->{$this->childrenRelation}; # DISABLED - beforeFind does not get applied in relations
-        $children = $model->findAllByAttributes(array('treeParent_id' => $this->owner->id));
+        $criteria = new CDbCriteria;
+        $criteria->condition = 'treeParent_id = '.$this->owner->id;
+        $criteria->order = "treePosition ASC";
+        $children = $model->findAll($criteria);
 
         if ($children !== array()) {
             foreach ($children AS $metaModel) {
@@ -239,6 +242,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
                 foreach (Yii::app()->authManager->getRoles(Yii::app()->user->id) AS $role) {
                     $checkAccessRoles .= "checkAccessRead = '" . $role->name . "' OR ";
                 }
+            } else {
+                $checkAccessRoles .= "checkAccessRead = 'Guest' OR ";
             }
             $criteria->condition = $checkAccessRoles . " " . "checkAccessRead IS NULL";
         }
