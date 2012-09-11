@@ -3,24 +3,14 @@
 
 class {$migrationClassName} extends CDbMigration {
 
-	public function up() {
+	public function safeUp() {
 		{$functionUp}
 	}
 
-	public function down() {
+	public function safeDown() {
 		echo 'Migration down not supported.';
 	}
 
-	/*
-	  // Use safeUp/safeDown to do migration with transaction
-	  public function safeUp()
-	  {
-	  }
-
-	  public function safeDown()
-	  {
-	  }
-	 */
 }
 
 ?>

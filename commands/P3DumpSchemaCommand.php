@@ -20,23 +20,34 @@
 
 class P3DumpSchemaCommand extends CConsoleCommand {
     
+    public $schema = true;
+    public $data = true;
+    
 	public function getHelp() {
         echo <<<EOS
-Usage: yiic p3dumpschema <schema> <table_prefix>
+Usage: yiic p3dumpschema <action> <schema> [<table_prefix>]
+
+Available actions: dump
+
+Available options: --schema=0|1
+                   --data=0|1
 
 EOS;
     }
 	
-	public function run($args) {
+	public function actionDump($args) {
 		
-		if (!isset($args[1])) {
+		if (!isset($args[0])) {
 			$this->getHelp();
 			exit;
 		}
 		
 		$schema = $args[0];
-		$prefix = $args[1];
-		
+		if (!isset($args[0])) {
+		    $prefix = $args[1];
+		} else {
+		    $prefix = "";
+		}
 		
 		$tables = Yii::app()->db->schema->getTables($schema);
 		$code = '';
@@ -48,17 +59,21 @@ EOS;
 		foreach ($tables as $table) {
 			if (substr($table->name, 0, strlen($prefix)) != $prefix)
 				continue;
+            
+            if ($this->schema == true) {
+			    $code .= "\n\n\n// Schema for table '" . $table->name . "'\n\n";
+    			$code .= $this->generateSchema($table, $schema);
 
-			$code .= "\n\n\n// Schema for table '" . $table->name . "'\n\n";
-			$code .= $this->generateSchema($table, $schema);
+    			$code .= "\n\n\n// Foreign Keys for table '" . $table->name . "'\n\n";
+	    		$code .= "if ((Yii::app()->db->schema instanceof CSqliteSchema) == false):\n";
+		    	$code .= $this->generateForeignKeys($table, $schema);
+			    $code .= "\nendif;\n";
+			}
 
-			$code .= "\n\n\n// Foreign Keys for table '" . $table->name . "'\n\n";
-			$code .= "if ((Yii::app()->db->schema instanceof CSqliteSchema) == false):\n";
-			$code .= $this->generateForeignKeys($table, $schema);
-			$code .= "\nendif;\n";
-
-			$code .= "\n\n\n// Data for table '" . $table->name . "'\n\n";
-			$code .= $this->generateInserts($table, $schema);
+            if ($this->data == true) {
+    			$code .= "\n\n\n// Data for table '" . $table->name . "'\n\n";
+	    		$code .= $this->generateInserts($table, $schema);
+	    	}
 		}
 		
 		$migrationClassName = 'm'.date('ymd_His')."_dump";
@@ -72,7 +87,9 @@ EOS;
 		
 		echo "Your schema has been dumped to '$filename'\n";
 	}
-
+    
+    
+    
 	private function generateSchema($table, $schema) {
 		$options = "ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		$code = '';
