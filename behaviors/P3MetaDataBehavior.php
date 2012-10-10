@@ -37,7 +37,8 @@
  * @package p3extensions.behaviors
  * @since 3.0.1
  */
-class P3MetaDataBehavior extends CActiveRecordBehavior {
+class P3MetaDataBehavior extends CActiveRecordBehavior
+{
 
     /**
      * Name of the relation identifier in the 'parent' model
@@ -71,7 +72,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
     const STATUS_HIDDEN = 50;
     const STATUS_ARCHIVE = 60;
 
-    public function getChildren() {
+    public function getChildren()
+    {
         $return = array();
 
         // TODO .... datacheck
@@ -83,7 +85,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
 
         //$children = $model->{$this->childrenRelation}; # DISABLED - beforeFind does not get applied in relations
         $criteria = new CDbCriteria;
-        $criteria->condition = 'treeParent_id = '.$this->owner->id;
+        $criteria->condition = 'treeParent_id = ' . $this->owner->id;
         $criteria->order = "treePosition ASC";
         $children = $model->findAll($criteria);
 
@@ -91,7 +93,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
             foreach ($children AS $metaModel) {
                 if ($this->metaDataRelation == '_self_') {
                     $return[] = $metaModel;
-                } else {
+                }
+                else {
                     $return[] = $metaModel->{$this->contentRelation};
                 }
             }
@@ -99,14 +102,23 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
         return $return;
     }
 
-    public function getParent() {
+    public function getParent()
+    {
         $model = $this->resolveMetaDataModel();
         return $model->findAllByAttributes(array('id' => $this->owner->{$this->metaDataRelation}->treeParent_id));
 
     }
 
-    public function beforeFind($event) {
+    public function beforeFind($event)
+    {
         parent::beforeFind($event);
+
+        // exist in console app - disable
+        if (Yii::app() instanceof CConsoleApplication) {
+            Yii::log('Meta Data behavior omitted in console application.', CLogger::LEVEL_INFO);
+            return true;
+        }
+
         //echo get_class($this->owner);
         $criteria = $this->createReadAccessCriteria();
         $this->owner->applyScopes($criteria);
@@ -118,15 +130,18 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
      * @param type $event
      * @return type
      */
-    public function beforeDelete($event) {
+    public function beforeDelete($event)
+    {
         parent::beforeDelete($event);
         if ($this->resolveMetaDataModel() !== null) {
             if ($this->resolveMetaDataModel()->checkAccessDelete && Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessDelete) === false) {
                 throw new CHttpException(403, "You are not authorized to perform this action. Access restricted by P3MetaDataBehavior.");
                 return false;
-            } else {
-                if ($this->metaDataRelation !== "_self_")
+            }
+            else {
+                if ($this->metaDataRelation !== "_self_") {
                     $this->resolveMetaDataModel()->delete();
+                }
             }
         }
         return true;
@@ -137,7 +152,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
      * @param type $event
      * @return type
      */
-    public function beforeSave($event) {
+    public function beforeSave($event)
+    {
         parent::beforeSave($event);
 
         // exist in console app - no automatic saving
@@ -160,7 +176,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
      * @param type $event
      * @return type
      */
-    public function afterSave($event) {
+    public function afterSave($event)
+    {
         parent::afterSave($event);
 
         // do not auto-create meta data information for meta data table itself (recursion).
@@ -171,7 +188,11 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
         // exist in console app - no automatic saving
         if (Yii::app() instanceof CConsoleApplication) {
             Yii::log('Meta Data behavior omitted in console application.', CLogger::LEVEL_INFO);
-            return true;
+            $userId = 1;
+            $primaryRole = null;
+        } else {
+            $userId = Yii::app()->user->id;
+            $primaryRole = key(Yii::app()->authManager->getRoles(Yii::app()->user->id));
         }
 
         // create new meta data record or just update modifiedBy/At columns
@@ -182,18 +203,18 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
             $metaModel->status = self::STATUS_ACTIVE;
             //$metaModel->language = Yii::app()->language;
             $metaModel->language = '_ALL';
-            $metaModel->owner = Yii::app()->user->id;
-            $primaryRole = key(Yii::app()->authManager->getRoles(Yii::app()->user->id));
+            $metaModel->owner = $userId;
             $metaModel->checkAccessUpdate = $primaryRole;
             $metaModel->checkAccessDelete = $primaryRole;
             $metaModel->createdAt = date('Y-m-d H:i:s');
-            $metaModel->createdBy = Yii::app()->user->id;
+            $metaModel->createdBy = $userId;
             $metaModel->guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
             $metaModel->model = get_class($this->owner);
-        } else {
+        }
+        else {
             $metaModel = $this->resolveMetaDataModel();
             $metaModel->modifiedAt = date('Y-m-d H:i:s');
-            $metaModel->modifiedBy = Yii::app()->user->id;
+            $metaModel->modifiedBy = $userId;
         }
         $metaModel->save();
         return true;
@@ -204,13 +225,16 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
      * @return type
      * @throws CException
      */
-    private function resolveMetaDataModel() {
+    private function resolveMetaDataModel()
+    {
         if (!$this->metaDataRelation) {
             throw new CException("Attribute 'metaDataRelation' for model '" . get_class($this->owner) . "' not set.");
-        } elseif ($this->metaDataRelation == "_self_") {
+        }
+        elseif ($this->metaDataRelation == "_self_") {
             // special case for meta data tables
             return $this->owner;
-        } elseif (strpos($this->metaDataRelation, ".")) {
+        }
+        elseif (strpos($this->metaDataRelation, ".")) {
             // if there's a dot in the name, build the return value in object notation
             $parts = explode(".", $this->metaDataRelation);
             $return = $this->owner;
@@ -218,7 +242,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
                 $return = $return->$part;
             }
             return $return;
-        } else {
+        }
+        else {
             // manual setting
             return $this->owner->{$this->metaDataRelation};
         }
@@ -228,7 +253,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
      *Creates a CDbCriteria with restrics read access by meta data settings
      * @return \CDbCriteria
      */
-    private function createReadAccessCriteria() {
+    private function createReadAccessCriteria()
+    {
         $criteria = new CDbCriteria;
 
         // do not apply filter for superuser
@@ -242,7 +268,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior {
                 foreach (Yii::app()->authManager->getRoles(Yii::app()->user->id) AS $role) {
                     $checkAccessRoles .= "checkAccessRead = '" . $role->name . "' OR ";
                 }
-            } else {
+            }
+            else {
                 $checkAccessRoles .= "checkAccessRead = 'Guest' OR ";
             }
             $criteria->condition = $checkAccessRoles . " " . "checkAccessRead IS NULL";
