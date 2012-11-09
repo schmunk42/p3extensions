@@ -204,8 +204,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
             //$metaModel->language = Yii::app()->language;
             $metaModel->language = '_ALL';
             $metaModel->owner = $userId;
-            $metaModel->checkAccessUpdate = $primaryRole;
-            $metaModel->checkAccessDelete = $primaryRole;
+            //$metaModel->checkAccessUpdate = $primaryRole; // removed setting it per default - TODO: config option
+            //$metaModel->checkAccessDelete = $primaryRole; // removed setting it per default - TODO: config option
             $metaModel->createdAt = date('Y-m-d H:i:s');
             $metaModel->createdBy = $userId;
             $metaModel->guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
@@ -261,18 +261,21 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         if (!Yii::app()->user->isSuperuser) {
             if ($this->owner->metaDataRelation != "_self_") {
                 $criteria->with = $this->owner->metaDataRelation;
+                $tablePrefix = $this->owner->metaDataRelation;
+            } else {
+                $tablePrefix = "t";
             }
 
             $checkAccessRoles = "";
             if (!Yii::app()->user->isGuest) {
                 foreach (Yii::app()->authManager->getRoles(Yii::app()->user->id) AS $role) {
-                    $checkAccessRoles .= "checkAccessRead = '" . $role->name . "' OR ";
+                    $checkAccessRoles .= $tablePrefix.".checkAccessRead = '" . $role->name . "' OR ";
                 }
             }
             else {
-                $checkAccessRoles .= "checkAccessRead = 'Guest' OR ";
+                $checkAccessRoles .= $tablePrefix.".checkAccessRead = 'Guest' OR ";
             }
-            $criteria->condition = $checkAccessRoles . " " . "checkAccessRead IS NULL";
+            $criteria->condition = $checkAccessRoles . " " . $tablePrefix.".checkAccessRead IS NULL";
         }
         return $criteria;
     }
