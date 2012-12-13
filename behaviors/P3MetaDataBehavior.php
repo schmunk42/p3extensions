@@ -263,7 +263,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
                 $criteria->with = $this->owner->metaDataRelation;
                 $tablePrefix = $this->owner->metaDataRelation;
             } else {
-                $tablePrefix = "t";
+                $tablePrefix = $this->owner->getTableAlias();
             }
 
             $checkAccessRoles = "";
