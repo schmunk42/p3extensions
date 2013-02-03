@@ -269,7 +269,7 @@ class CKEditor extends CInputWidget{
         }
 		
 		// post parse special options
-		$createUrls = array('filebrowserBrowseCreateUrl','filebrowserImageBrowseCreateUrl','filebrowserFlashBrowseCreateUrl');
+		$createUrls = array('filebrowserBrowseCreateUrl','filebrowserImageBrowseCreateUrl','filebrowserFlashBrowseCreateUrl','filebrowserUploadCreateUrl');
 		foreach($createUrls AS $name) {
 			if (isset($options[$name]) && $options[$name]) {
 				$route = $options[$name][0];
