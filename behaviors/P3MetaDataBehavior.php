@@ -105,7 +105,17 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     public function getParent()
     {
         $model = $this->resolveMetaDataModel();
-        return $model->findAllByAttributes(array('id' => $this->owner->{$this->metaDataRelation}->treeParent_id));
+        $result = $model->findByAttributes(array('id' => $this->owner->{$this->metaDataRelation}->treeParent_id));
+        if ($this->metaDataRelation == '_self_') {
+            return $result;
+        }
+        else {
+            if ($result !== null) {
+                return $result->{$this->contentRelation};
+            } else {
+                return $result;
+            }
+        }
 
     }
 
