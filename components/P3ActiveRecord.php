@@ -12,9 +12,7 @@
  * ActiveRecord, basic settings for p2 core models
  *
  * @author Tobias Munk <schmunk@usrbin.de>
- * @version $Id$
- * @package p2.models
- * @since 2.0
+ * @package p3extensions.components
  */
 class P3ActiveRecord extends CActiveRecord {
 

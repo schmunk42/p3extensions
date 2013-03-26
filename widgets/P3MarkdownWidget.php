@@ -19,8 +19,8 @@
  * {@link DefaultController}
  *
  * @author Tobias Munk <schmunk@usrbin.de>
- * @package p3
- * @since 3.1
+ * @package p3extensions.widgets
+ * @category web.widgets
  */
 class P3MarkdownWidget extends CMarkdown {
 
