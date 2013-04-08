@@ -31,6 +31,12 @@ class P3LangHandler extends CApplicationComponent {
 	 * @var type
 	 */
 	public $languages = array();
+    /**
+     * if long language specifiers, like `de-de` and `de-ch` should be translated to 'de'
+     * @var type
+     */
+    public $matchShort = true;
+
 
 	/**
 	 * Handles language detection and application setting by URL parm specified in DATA_KEY
@@ -41,9 +47,15 @@ class P3LangHandler extends CApplicationComponent {
 
 		if (!isset($_GET[self::DATA_KEY])) {
 			$preferred = Yii::app()->getRequest()->getPreferredLanguage();
+            $preferredShort = substr($preferred, 0, 2);
+
 			if (in_array($preferred, $this->languages)) {
 				Yii::app()->setLanguage($preferred);
-			} else {
+            }
+            elseif (($this->matchShort === true) && in_array($preferredShort, $this->languages)) {
+                Yii::app()->setLanguage($preferredShort);
+            }
+            else {
 				Yii::app()->setLanguage(Yii::app()->language);
 			}
 		} elseif ($_GET[self::DATA_KEY] != Yii::app()->getLanguage() && in_array($_GET[self::DATA_KEY], $this->languages)) {
