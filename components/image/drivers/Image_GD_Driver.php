@@ -80,6 +80,8 @@ class Image_GD_Driver extends Image_Driver {
 		if(isset ($actions['quality'])) {
 			$quality = $actions['quality'];
 			unset($actions['quality']);
+		} else {
+			$quality = NULL;
 		}
 		
 		if ($status = $this->execute($actions))
