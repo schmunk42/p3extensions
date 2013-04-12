@@ -64,6 +64,9 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
      */
     public $childrenRelation;
 
+    private $_children = null;
+    private $_parent = null;
+
     const STATUS_DELETED = 0;
     const STATUS_DRAFT = 10;
     const STATUS_PENDING = 20;
@@ -74,50 +77,51 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
 
     public function getChildren()
     {
+        if ($this->_children === null) {
+
         $return = array();
 
         // TODO .... datacheck
         $model = $this->resolveMetaDataModel();
         if ($model === null) {
             Yii::log('Record #' . $this->owner->id . ' has no Meta Data model.');
+
             return array();
         }
 
-        //$children = $model->{$this->childrenRelation}; # DISABLED - beforeFind does not get applied in relations
         $criteria = new CDbCriteria;
         $criteria->condition = 'treeParent_id = ' . $this->owner->id;
         $criteria->order = "treePosition ASC";
-        $children = $model->findAll($criteria);
+            $owner               = $this->owner;
+            $children            = $owner::model()->with($this->metaDataRelation)->findAll($criteria);
 
-        if ($children !== array()) {
             foreach ($children AS $metaModel) {
-                if ($this->metaDataRelation == '_self_') {
                     $return[] = $metaModel;
                 }
-                else {
-                    $return[] = $metaModel->{$this->contentRelation};
-                }
-            }
+
+            $this->_children = $return;
         }
-        return $return;
+
+        return $this->_children;
     }
 
     public function getParent()
     {
+        if ($this->_parent === null) {
         $model = $this->resolveMetaDataModel();
-        $result = $model->findByAttributes(array('id' => $this->owner->{$this->metaDataRelation}->treeParent_id));
         if ($this->metaDataRelation == '_self_') {
-            return $result;
+                $result = $model->findByAttributes(array('id' => $this->owner->{$this->metaDataRelation}->treeParent_id));
         }
         else {
-            if ($result !== null) {
-                return $result->{$this->contentRelation};
-            } else {
-                return $result;
+                $owner  = $this->owner;
+                $result = $owner::model()->findByAttributes(array('id' => $model->treeParent_id));
             }
+            $this->_parent = $result;
         }
 
+        return $this->_parent;
     }
+
 
     public function beforeFind($event)
     {
