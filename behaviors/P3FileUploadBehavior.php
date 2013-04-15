@@ -18,6 +18,10 @@
  * @package p3extensions.behaviors
  * @since 3.0.1
  */
+
+Yii::setPathOfAlias('p3extensions-helpers',dirname(__FILE__).'/../helpers/');
+Yii::import('p3extensions-helpers.*');
+
 class P3FileUploadBehavior extends CActiveRecordBehavior {
 	const TRASH_FOLDER = 'trash';
 
