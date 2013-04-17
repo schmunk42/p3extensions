@@ -58,6 +58,11 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
      */
     public $childrenRelation;
 
+    /**
+     * @var
+     */
+    public $superuserRole = 'Superuser';
+
     private $_children = null;
     private $_parent = null;
 
@@ -285,7 +290,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         $criteria = new CDbCriteria;
 
         // do not apply filter for superuser
-        if (!Yii::app()->user->isSuperuser) {
+        if (!Yii::app()->user->checkAccess($this->superuserRole)) {
             if ($this->owner->metaDataRelation != "_self_") {
                 $criteria->with = $this->owner->metaDataRelation;
                 $tablePrefix    = $this->owner->metaDataRelation;
