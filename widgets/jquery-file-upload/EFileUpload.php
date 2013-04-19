@@ -22,7 +22,7 @@ class EFileUpload extends CWidget {
 		$cs->registerCoreScript('jquery');
 		$cs->registerCoreScript('jquery.ui');
 
-		$cs->registerScriptFile('//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js', CClientScript::POS_END); // TODO: copy to assets
+		$cs->registerScriptFile($am->publish(dirname(__FILE__).DIRECTORY_SEPARATOR.'jquery.tmpl.min.js'), CClientScript::POS_END);
 		Yii::app()->clientScript->registerCssFile(Yii::app()->clientScript->getCoreScriptUrl().'/jui/css/base/jquery-ui.css'); // TODO: use default theme or override css in config main?
 		$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'jquery.fileupload.js'), CClientScript::POS_END);
 		$cs->registerScriptFile($am->publish($assetsPath.DIRECTORY_SEPARATOR.'jquery.fileupload-ui.js'), CClientScript::POS_END);
