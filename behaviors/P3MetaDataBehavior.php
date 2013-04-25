@@ -65,6 +65,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
 
     private $_children = null;
     private $_parent = null;
+    private $_metaDataModel = null;
 
     const STATUS_DELETED = 0;
     const STATUS_DRAFT   = 10;
@@ -140,7 +141,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     }
 
     /**
-     * Checks permissions in attribute checkAccessDelete
+     * Checks permissions in attribute checkAccessDelete and saves meta-data model for afterDelete
      *
      * @param type $event
      *
@@ -157,11 +158,26 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
             }
             else {
                 if ($this->metaDataRelation !== "_self_") {
-                    $this->resolveMetaDataModel()->delete();
+                    $this->_metaDataModel = $this->resolveMetaDataModel(); // save model for deletion, should be done automatically eg. in MySQL
                 }
             }
         }
 
+        return true;
+    }
+
+    /**
+     * Deletes meta data record
+     *
+     * @param type $event
+     *
+     * @return type
+     */
+    public function afterDelete($event)
+    {
+        if ($this->_metaDataModel !== null) {
+            $this->_metaDataModel->delete(); // delete, if base record is already deleted
+        }
         return true;
     }
 
