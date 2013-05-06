@@ -240,6 +240,61 @@ class Image_GD_Driver extends Image_Driver {
 			$properties['width'] = round($width * $properties['height'] / $height);
 		}
 
+        if ($properties['master'] === Image::AUTO_FIT)
+        {
+            $source_aspect_ratio = $width / $height;
+            $desired_aspect_ratio = $properties['width'] / $properties['height'];
+
+            if ($source_aspect_ratio > $desired_aspect_ratio)
+            {
+                // Triggered when source image is wider
+                $temp_height = $properties['height'];
+                $temp_width = ( int ) ($properties['height'] * $source_aspect_ratio);
+            }
+            else
+            {
+                // Triggered when source image is similar or taller
+                $temp_width = $properties['width'];
+                $temp_height = ( int ) ($properties['width'] / $source_aspect_ratio);
+            }
+
+            /*
+             * Resize the image into a temporary GD image
+             */
+
+            $temp_gd_img = $this->imagecreatetransparent($temp_width, $temp_height);
+            imagecopyresampled(
+                $temp_gd_img,
+                $this->tmp_image,
+                0, 0,
+                0, 0,
+                $temp_width, $temp_height,
+                $width, $height
+            );
+
+            /*
+             * Copy cropped region from temporary image into the desired GD image
+             */
+
+            $x0 = ($temp_width - $properties['width']) / 2;
+            $y0 = ($temp_height - $properties['height']) / 2;
+            $desired_gd_img = $this->imagecreatetransparent($properties['width'], $properties['height']);
+            $result=imagecopy(
+                $desired_gd_img,
+                $temp_gd_img,
+                0, 0,
+                $x0, $y0,
+                $properties['width'], $properties['height']
+            );
+
+            if ($result){
+                imagedestroy($this->tmp_image);
+                $this->tmp_image = $desired_gd_img;
+            }
+
+            return $result;
+        }
+
 		// Test if we can do a resize without resampling to speed up the final resize
 		if ($properties['width'] > $width / 2 AND $properties['height'] > $height / 2)
 		{

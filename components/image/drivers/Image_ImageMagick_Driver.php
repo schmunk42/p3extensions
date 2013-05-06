@@ -162,6 +162,9 @@ class Image_ImageMagick_Driver extends Image_Driver {
 			case Image::AUTO:   // WxH
 				$dim = escapeshellarg($prop['width'].'x'.$prop['height']);
 			break;
+            case Image::AUTO_FIT:   // FIT WxH
+                $dim = escapeshellarg($prop['width'].'x'.$prop['height'].'^ -gravity center -extend '.$prop['width'].'x'.$prop['height']);
+            break;
 			case Image::NONE:   // WxH!
 				$dim = escapeshellarg($prop['width'].'x'.$prop['height'].'!');
 			break;

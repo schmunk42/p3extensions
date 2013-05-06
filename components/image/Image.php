@@ -21,6 +21,7 @@ class Image {
 	const AUTO = 2;
 	const HEIGHT = 3;
 	const WIDTH = 4;
+    const AUTO_FIT = 7;
 	// Flip Directions
 	const HORIZONTAL = 5;
 	const VERTICAL = 6;
@@ -431,6 +432,7 @@ class Image {
 			case 'master':
 				if ($value !== Image::NONE AND
 				    $value !== Image::AUTO AND
+                    $value !== Image::AUTO_FIT AND
 				    $value !== Image::WIDTH AND
 				    $value !== Image::HEIGHT)
 					return FALSE;
