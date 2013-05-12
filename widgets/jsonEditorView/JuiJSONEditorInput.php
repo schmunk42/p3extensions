@@ -74,6 +74,11 @@ class JuiJSONEditorInput extends CJuiInputWidget
 			$this->data = $this->model->{$this->attribute};
 		}
 
+        /* TODO - hotfix: if value is not JSON, auto-convert it */
+        if (substr($this->data,0,1) !== "{") {
+            $this->data = '{"CONVERTED_FROM_STRING":"'.$this->data.'"}';
+        }
+
 		$this->registerClientScript();
 	}
 
