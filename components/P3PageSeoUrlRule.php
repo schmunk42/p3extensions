@@ -4,7 +4,7 @@
  * @author Anne Datema <anne@uitzendsoftware.com>
  * @copyright Copyright &copy; Uitzend Software Diensten b.v. 2013
  * @license http://www.phundament.com/license/
- * @version 1.0.1
+ * @version 1.0.3
  */
 
 /**
@@ -35,16 +35,26 @@ class P3PageSeoUrlRule extends CBaseUrlRule
      */
     public function createUrl($manager, $route, $params, $ampersand)
     {
+        $url = null;
+
         // This is a P3Page and not another route, because the P3Page->createUrl took care of that
         if ($route === 'p3pages/default/page'){
             $p3page = null;
+            $additionalParams = $params;
 
             // search page with ID
             if (isset($params[P3Page::PAGE_ID_KEY]))
             {
+                unset($additionalParams[P3Page::PAGE_ID_KEY]);
+
+                if (isset($params[P3Page::PAGE_NAME_KEY]))
+                    unset($additionalParams[P3Page::PAGE_NAME_KEY]);
+
                 $p3page = P3Page::model()->with('p3PageTranslations')->findByPk($params[P3Page::PAGE_ID_KEY]);
 
-                if (isset($params['lang'])){
+                if (!empty($p3page) && isset($params['lang'])){
+                    unset($additionalParams['lang']);
+
                     $seoUrl = null;
                     foreach ($p3page->p3PageTranslations as $translation){
                         if ($translation->language == $params['lang']){
@@ -57,7 +67,13 @@ class P3PageSeoUrlRule extends CBaseUrlRule
                             $params['lang'],
                             $seoUrl,
                         );
-                        return implode('/',array_filter($url)); //this also filters out empty array items
+
+                        $url = implode('/',array_filter($url)); //this also filters out empty array items
+
+                        if (!empty($additionalParams)){
+                            $additionalParams = $manager->createPathInfo($additionalParams,'=',$ampersand);
+                            $url .= '?'.$additionalParams;
+                        }
                     }
                 }
 
@@ -65,19 +81,30 @@ class P3PageSeoUrlRule extends CBaseUrlRule
             // search page with NAME
             elseif (isset($params[P3Page::PAGE_NAME_KEY]))
             {
-                if (p3PageTranslations::model()->findByAttributes(array('seoUrl'=>$params[P3Page::PAGE_NAME_KEY]))){
+//                return false;
+                unset ($additionalParams[P3Page::PAGE_NAME_KEY]);
+
+                if (P3PageTranslation::model()->findByAttributes(array('seoUrl'=>$params[P3Page::PAGE_NAME_KEY]))){
                     $url = array(
                         $params['lang'],
                         $params[P3Page::PAGE_NAME_KEY],
                     );
-                    return implode('/',array_filter($url)); //this also filters out empty array items
+
+                    unset ($additionalParams['lang']);
+
+                    $url = implode('/',array_filter($url)); //this also filters out empty array items
+
+                    if (!empty($additionalParams)){
+                        $additionalParams = $manager->createPathInfo($additionalParams,'=',$ampersand);
+                        $url .= '?'.$additionalParams;
+                    }
                 }
 
             }
 
         }
-        // nothing applied, perhaps there is another rule more suitable. Skip this one after all.
-        return false;
+
+        return ($url !== null) ? $url : false;
     }
 
     /**
