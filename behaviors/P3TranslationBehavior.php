@@ -109,7 +109,8 @@ class P3TranslationBehavior extends CActiveRecordBehavior {
 			return $models[$language]->$attr;
 		} else if ($fallback === true && isset($models[$this->fallbackLanguage])) {
 			// fallback model
-			return $models[$this->fallbackLanguage]->$attr.$this->fallbackIndicator[$attr];
+            $indicator = (isset($this->fallbackIndicator[$attr])) ? $this->fallbackIndicator[$attr] : '';
+			return $models[$this->fallbackLanguage]->$attr.$indicator;
 		} else if ($fallback === true && !in_array($attr, $this->attributesBlacklist)) {
 			// return string if there's no value, but fallback in on
 			return $this->fallbackValue;
