@@ -149,6 +149,60 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     }
 
     /**
+     * Named scope for records the user can read
+     * @return mixed
+     */
+    public function readable(){
+        $this->Owner->getDbCriteria()->mergeWith($this->createAccessCriteria('checkAccessRead'));
+        return $this->Owner;
+    }
+
+    /**
+     * Named scope for records the user can update
+     * @return mixed
+     */
+    public function updateable(){
+        $this->Owner->getDbCriteria()->mergeWith($this->createAccessCriteria('checkAccessUpdate'));
+        return $this->Owner;
+    }
+
+    /**
+     * Named scope for records the user can delete
+     * @return mixed
+     */
+    public function deleteable(){
+        $this->Owner->getDbCriteria()->mergeWith($this->createAccessCriteria('checkAccessDelete'));
+        return $this->Owner;
+    }
+
+    /**
+     * Named scope for records in a specific language
+     * @return mixed
+     */
+    public function localized($language = null, $strict = false)
+    {
+        if ($language === null) {
+            $language = Yii::app()->language;
+        }
+
+        $condition = "({$this->metaDataRelation}.language = :language";
+
+        if ($strict === false) {
+            $condition .= " OR {$this->metaDataRelation}.language = '" . self::ALL_LANGUAGES . "')";
+        } else {
+            $condition .= ")";
+        }
+
+        $this->Owner->getDbCriteria()->mergeWith(
+            array(
+                 'condition' => $condition,
+                 'params'    => array(':language' => $language)
+            )
+        );
+        return $this->Owner;
+    }
+
+    /**
      * Saves a copy of the record with associated meta data.
      * The fields owner, created_at/by, modified_at/by are not copied.
      */
