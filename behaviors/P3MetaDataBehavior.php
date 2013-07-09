@@ -185,7 +185,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         }
 
         //echo get_class($this->owner);
-        $criteria = $this->createReadAccessCriteria();
+        $criteria = $this->createAccessCriteria('checkAccessRead');
         $this->owner->applyScopes($criteria);
         $this->owner->setDbCriteria($criteria);
     }
@@ -276,34 +276,48 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
             return true;
         }
 
-        // exist in console app - no automatic saving
+        // running in console app - no automatic saving
         if (Yii::app() instanceof CConsoleApplication) {
-            Yii::log('Meta Data behavior omitted in console application.', CLogger::LEVEL_INFO);
+            Yii::log('P3MetaData behavior omitted in console application.', CLogger::LEVEL_INFO);
             $userId      = 1;
             $primaryRole = null;
         }
         else {
             $userId      = Yii::app()->user->id;
-            $primaryRole = key(Yii::app()->authManager->getRoles(Yii::app()->user->id));
+            $defaultRoles = $this->resolveDefaultRoles();
+        }
+
+        if ($this->defaultLanguage === self::APP_LANGUAGE) {
+            $this->defaultLanguage = Yii::app()->language;
         }
 
         // create new meta data record or just update modifiedBy/At columns
         if ($this->resolveMetaDataModel() === null) {
-            $metaClassName     = $this->owner->getActiveRelation($this->metaDataRelation)->className;
-            $metaModel         = new $metaClassName;
-            $metaModel->id     = $this->owner->id;
-            $metaModel->status = self::STATUS_ACTIVE;
-            //$metaModel->language = Yii::app()->language;
-            $metaModel->language = '_ALL';
-            $metaModel->owner    = $userId;
-            //$metaModel->checkAccessUpdate = $primaryRole; // removed setting it per default - TODO: config option
-            //$metaModel->checkAccessDelete = $primaryRole; // removed setting it per default - TODO: config option
-            $metaModel->createdAt = date('Y-m-d H:i:s');
-            $metaModel->createdBy = $userId;
-            $metaModel->guid      = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
-            $metaModel->model     = get_class($this->owner);
-        }
-        else {
+            $metaClassName                = $this->owner->getActiveRelation($this->metaDataRelation)->className;
+            $metaModel                    = new $metaClassName;
+            $metaModel->id                = $this->owner->id;
+            $metaModel->status            = $this->defaultStatus;
+            $metaModel->language          = $this->defaultLanguage;
+            $metaModel->owner             = $userId;
+            $metaModel->checkAccessUpdate = $defaultRoles['defaultRoleUpdate']; // set, when a user has associated data array('defaultRoleUpdate'=>true) in an assignment.
+            $metaModel->checkAccessDelete = $defaultRoles['defaultRoleDelete'];
+            $metaModel->checkAccessCreate = $defaultRoles['defaultRoleCreate'];
+            $metaModel->checkAccessRead   = $defaultRoles['defaultRoleRead'];
+            $metaModel->createdAt         = date('Y-m-d H:i:s');
+            $metaModel->createdBy         = $userId;
+            $metaModel->guid              = sprintf(
+                '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
+                mt_rand(0, 65535),
+                mt_rand(0, 65535),
+                mt_rand(0, 65535),
+                mt_rand(16384, 20479),
+                mt_rand(32768, 49151),
+                mt_rand(0, 65535),
+                mt_rand(0, 65535),
+                mt_rand(0, 65535)
+            );
+            $metaModel->model             = get_class($this->owner);
+        } else {
             $metaModel             = $this->resolveMetaDataModel();
             $metaModel->modifiedAt = date('Y-m-d H:i:s');
             $metaModel->modifiedBy = $userId;
@@ -364,16 +378,35 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
             $checkAccessRoles = "";
             if (!Yii::app()->user->isGuest) {
                 foreach (Yii::app()->authManager->getRoles(Yii::app()->user->id) AS $role) {
-                    $checkAccessRoles .= $tablePrefix . ".checkAccessRead = '" . $role->name . "' OR ";
+                    $checkAccessRoles .= $tablePrefix . ".".$type." = '" . $role->name . "' OR ";
                 }
             }
             else {
-                $checkAccessRoles .= $tablePrefix . ".checkAccessRead = 'Guest' OR ";
+                $checkAccessRoles .= $tablePrefix . ".".$type." = 'Guest' OR ";
             }
-            $criteria->condition = $checkAccessRoles . " " . $tablePrefix . ".checkAccessRead IS NULL";
+            $criteria->condition = $checkAccessRoles . " " . $tablePrefix . ".".$type." IS NULL";
         }
 
         return $criteria;
+    }
+
+    /**
+     * Finds role with associated data eg. array('primaryRoleCreate'=>true)
+     * Note: Last assignment wins.
+     * @return null|string
+     */
+    private function resolveDefaultRoles()
+    {
+        $assignments = Yii::app()->authManager->getAuthAssignments(Yii::app()->user->id);
+        $roles       = $this->defaultRoles;
+        foreach ($assignments AS $assignmentName => $assignment) {
+            foreach($roles AS $roleName => $role) {
+                if (isset($assignment->data[$roleName]) && true === $assignment->data[$roleName]) {
+                    $roles[$roleName] = $assignmentName;
+                }
+            }
+        }
+        return $roles;
     }
 
 }
