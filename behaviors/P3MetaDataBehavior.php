@@ -377,14 +377,23 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
             return true;
         }
 
-        if ($this->resolveMetaDataModel() !== null && $this->resolveMetaDataModel()->checkAccessUpdate) {
-            if (Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessUpdate) === false) {
-                throw new CHttpException(403, "You are not authorized to update this record.");
+        // TODO - implement parent create check
+        // on update check permission with record from database - not the modified one
+        $currentModel = $this->owner->model()->findByPk($this->owner->id);
+        if ($currentModel !== null) {
+            if ($currentModel->metaDataRelation == '_self_') {
+                $checkAccess = $currentModel->checkAccessUpdate;
+            } else {
+                $checkAccess = $currentModel->{$this->metaDataRelation}->checkAccessUpdate;
+            }
 
-                return false;
+            if ($checkAccess) {
+                if (Yii::app()->user->checkAccess($checkAccess) === false) {
+                    throw new CHttpException(403, "You are not authorized to update this record.");
+                    return false;
+                }
             }
         }
-
         return true;
     }
 
