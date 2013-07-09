@@ -148,6 +148,30 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         return $this->_parent;
     }
 
+    /**
+     * Saves a copy of the record with associated meta data.
+     * The fields owner, created_at/by, modified_at/by are not copied.
+     */
+    public function duplicate()
+    {
+        $baseClass        = get_class($this->owner);
+        $base             = new $baseClass;
+        $base->attributes = $this->owner->attributes;
+        $base->save();
+
+        $metaDataModel           = $this->resolveMetaDataModel();
+        $metaData                = $base->{$base->metaDataRelation};
+        $metaData->treeParent_id = $metaDataModel->treeParent_id;
+        $metaData->treePosition  = $metaDataModel->treePosition;
+        $metaData->begin         = $metaDataModel->begin;
+        $metaData->end           = $metaDataModel->end;
+        $metaData->keywords      = $metaDataModel->keywords;
+        $metaData->customData    = $metaDataModel->customData;
+        $metaData->label         = $metaDataModel->label;
+        $metaData->ancestor_guid = $metaDataModel->guid;
+
+        $metaData->save();
+    }
 
     public function beforeFind($event)
     {
