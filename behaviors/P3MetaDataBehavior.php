@@ -175,6 +175,37 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         return $this->Owner;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function draft(){
+        $this->Owner->getDbCriteria()->mergeWith(array(
+            'condition' => $this->metaDataRelation.'status = '.self::STATUS_DRAFT,
+        ));
+        return $this->Owner;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function pending(){
+        $this->Owner->getDbCriteria()->mergeWith(array(
+            'condition' => $this->metaDataRelation.'status = '.self::STATUS_PENDING,
+        ));
+        return $this->Owner;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function active(){
+        $this->Owner->getDbCriteria()->mergeWith(array(
+            'condition' => $this->metaDataRelation.'status = '.self::STATUS_ACTIVE,
+        ));
+        return $this->Owner;
+    }
+
     /**
      * Named scope for records in a specific language
      * @return mixed
