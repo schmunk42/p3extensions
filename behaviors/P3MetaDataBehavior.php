@@ -178,7 +178,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         parent::beforeDelete($event);
         if ($this->resolveMetaDataModel() !== null) {
             if ($this->resolveMetaDataModel()->checkAccessDelete && Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessDelete) === false) {
-                throw new CHttpException(403, "You are not authorized to perform this action. Access restricted by P3MetaDataBehavior.");
+                throw new CHttpException(403, "You are not authorized to delete this record.");
 
                 return false;
             }
@@ -227,7 +227,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
 
         if ($this->resolveMetaDataModel() !== null && $this->resolveMetaDataModel()->checkAccessUpdate) {
             if (Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessUpdate) === false) {
-                throw new CHttpException(403, "You are not authorized to perform this action. Access restricted by P3MetaDataBehavior.");
+                throw new CHttpException(403, "You are not authorized to update this record.");
 
                 return false;
             }
