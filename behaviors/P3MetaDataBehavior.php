@@ -34,6 +34,16 @@
 class P3MetaDataBehavior extends CActiveRecordBehavior
 {
 
+    const STATUS_DELETED = 0;
+    const STATUS_DRAFT   = 10;
+    const STATUS_PENDING = 20;
+    const STATUS_ACTIVE  = 30;
+    const STATUS_LOCKED  = 40;
+    const STATUS_HIDDEN  = 50;
+    const STATUS_ARCHIVE = 60;
+    const ALL_LANGUAGES  = '*';
+    const APP_LANGUAGE  = '!';
+
     /**
      * Name of the relation identifier in the 'parent' model
      * @var string
@@ -59,6 +69,30 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     public $childrenRelation;
 
     /**
+     * Name of the internal meta data (parent-)child relation, set to `null` if a record should be automatically created
+     * with the current application language in its meta data
+     * @var type
+     */
+    public $defaultLanguage = self::ALL_LANGUAGES;
+
+    /**
+     * Name of the internal meta data (parent-)child relation
+     * @var type
+     */
+    public $defaultStatus = self::STATUS_ACTIVE;
+
+    /**
+     * Roles to use for checkAccess columns on create
+     * @var type
+     */
+    public $defaultRoles = array(
+        'defaultRoleRead'   => null,
+        'defaultRoleCreate' => null,
+        'defaultRoleUpdate' => null,
+        'defaultRoleDelete' => null,
+    );
+
+    /**
      * @var
      */
     public $superuserRole = 'Superuser';
@@ -66,14 +100,6 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     private $_children = null;
     private $_parent = null;
     private $_metaDataModel = null;
-
-    const STATUS_DELETED = 0;
-    const STATUS_DRAFT   = 10;
-    const STATUS_PENDING = 20;
-    const STATUS_ACTIVE  = 30;
-    const STATUS_LOCKED  = 40;
-    const STATUS_HIDDEN  = 50;
-    const STATUS_ARCHIVE = 60;
 
     public function getChildren()
     {
@@ -188,8 +214,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
      *
      * @return type
      */
-    public
-    function beforeSave($event)
+    public function beforeSave($event)
     {
         parent::beforeSave($event);
 
@@ -218,8 +243,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
      *
      * @return type
      */
-    public
-    function afterSave($event)
+    public function afterSave($event)
     {
         parent::afterSave($event);
 
@@ -270,8 +294,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
      * @return type
      * @throws CException
      */
-    private
-    function resolveMetaDataModel()
+    private function resolveMetaDataModel()
     {
         if (!$this->metaDataRelation) {
             throw new CException("Attribute 'metaDataRelation' for model '" . get_class($this->owner) . "' not set.");
@@ -300,8 +323,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
      *Creates a CDbCriteria with restrics read access by meta data settings
      * @return \CDbCriteria
      */
-    private
-    function createReadAccessCriteria()
+    private function createAccessCriteria($type)
     {
         $criteria = new CDbCriteria;
 
