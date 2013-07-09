@@ -153,9 +153,34 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
      * Named scope for records the user can read
      * @return mixed
      */
+    public function createable(){
+        $this->Owner->getDbCriteria()->mergeWith($this->createAccessCriteria('checkAccessCreate'));
+        return $this->Owner;
+    }
+
+    /**
+     * Whether the record can be read by the current user
+     * @return boolean
+     */
+    public function isCreateable(){
+        return Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessCreate);
+    }
+
+    /**
+     * Named scope for records the user can read
+     * @return mixed
+     */
     public function readable(){
         $this->Owner->getDbCriteria()->mergeWith($this->createAccessCriteria('checkAccessRead'));
         return $this->Owner;
+    }
+
+    /**
+     * Whether the record can be read by the current user
+     * @return boolean
+     */
+    public function isReadable(){
+        return Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessRead);
     }
 
     /**
@@ -168,12 +193,29 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     }
 
     /**
+     * Whether the record can be updated by the current user
+     * @return boolean
+     */
+    public function isUpdateable(){
+        return Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessUpdate);
+    }
+
+
+    /**
      * Named scope for records the user can delete
      * @return mixed
      */
     public function deleteable(){
         $this->Owner->getDbCriteria()->mergeWith($this->createAccessCriteria('checkAccessDelete'));
         return $this->Owner;
+    }
+
+    /**
+     * Whether the record can be deleted by the current user
+     * @return boolean
+     */
+    public function isDeleteable(){
+        return Yii::app()->user->checkAccess($this->resolveMetaDataModel()->checkAccessDelete);
     }
 
 
