@@ -24,15 +24,19 @@ class P3LangHandler extends CApplicationComponent
     const DATA_KEY = 'lang';
     /**
      * Available languages
-     * @var type
+     * @var array
      */
     public $languages = array();
     /**
      * if long language specifiers, like `de-de` and `de-ch` should be translated to 'de'
-     * @var type
+     * @var boolean
      */
     public $matchShort = true;
-
+    /**
+     * fallback to the default application language, if specified lanugae is not configured
+     * @var boolean
+     */
+    public $fallback = true;
 
     /**
      * Handles language detection and application setting by URL parm specified in DATA_KEY
@@ -42,23 +46,35 @@ class P3LangHandler extends CApplicationComponent
         // parsing needed if urlFormat 'path'
         Yii::app()->urlManager->parseUrl(Yii::app()->getRequest());
 
+
+        // use preferred browser language
         if (!isset($_GET[self::DATA_KEY])) {
             $preferred      = Yii::app()->getRequest()->getPreferredLanguage();
             $preferredShort = substr($preferred, 0, 2);
 
             if (in_array($preferred, $this->languages)) {
                 Yii::app()->setLanguage($preferred);
-            }
-            elseif (($this->matchShort === true) && in_array($preferredShort, $this->languages)) {
+            } elseif (($this->matchShort === true) && in_array($preferredShort, $this->languages)) {
                 Yii::app()->setLanguage($preferredShort);
-            }
-            else {
+            } else {
                 Yii::app()->setLanguage(Yii::app()->language);
             }
         }
-        elseif ($_GET[self::DATA_KEY] != Yii::app()->getLanguage() && in_array($_GET[self::DATA_KEY], $this->languages)
+        // use language form URL
+        elseif ($_GET[self::DATA_KEY] != Yii::app()->getLanguage() && in_array(
+                $_GET[self::DATA_KEY],
+                $this->languages
+            )
         ) {
             Yii::app()->setLanguage($_GET[self::DATA_KEY]);
+        }
+        // fallback or output error
+        else {
+            if (Yii::app()->language != $_GET[self::DATA_KEY] && $this->fallback === false) {
+                throw new CHttpException(404, "Language '{$_GET[self::DATA_KEY]}' is not available.");
+            } else {
+                // default app language
+            }
         }
     }
 
