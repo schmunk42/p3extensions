@@ -14,7 +14,7 @@
 
 <body>
 <div id="fileupload">
-    <form action="<?php echo $this->controller->createUrl('uploadFile') ?>" method="POST" enctype="multipart/form-data">
+    <form action="<?php echo $this->controller->createUrl('/p3media/import/uploadFile') ?>" method="POST" enctype="multipart/form-data">
         <div class="fileupload-buttonbar">
             <label class="fileinput-button">
                 <span>Add files...</span>
