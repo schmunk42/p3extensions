@@ -42,7 +42,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     const STATUS_HIDDEN  = 50;
     const STATUS_ARCHIVE = 60;
     const ALL_LANGUAGES  = '*';
-    const APP_LANGUAGE  = '!';
+    const APP_LANGUAGE   = '!';
     const SUPERUSE_ROLE  = 'Superuser';
 
     /**
