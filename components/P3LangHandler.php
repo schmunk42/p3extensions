@@ -83,7 +83,30 @@ class P3LangHandler extends CApplicationComponent
 		}
 	}
 
-	/**
+    /**
+     * Returns the language part for the application language
+     * Eg. `de` for `Yii::app()->langauge = 'de_ch`
+     * @return string
+     */
+    public function getLanguage(){
+        return strstr(Yii::app()->language,'_',true);
+    }
+
+    /**
+     * Returns the region part for application language, `null` if the short form is used.
+     * Eg. `ch` for `Yii::app()->langauge = 'de_ch`
+     * @return string
+     */
+    public function getCountry(){
+        if (strstr(Yii::app()->language,'_')) {
+            return substr(strstr(Yii::app()->language,'_'),1);
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
 	 * Resolves an available language from a preferred language.
 	 *
 	 * @param type $preferred
