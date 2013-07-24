@@ -307,7 +307,24 @@ class CKEditor extends CInputWidget{
             $this->htmlOptions['rows'] = self::ROWS;
         }
 
-        $js =<<<EOP
+        // Get param 'ext.ckeditor.dtd' vars
+        if (is_array(Yii::app()->params["ext.ckeditor.dtd"])) {
+
+            $ckeditorParamDtd = Yii::app()->params["ext.ckeditor.dtd"];
+            $ckeditorDTD = '';
+
+            foreach ($ckeditorParamDtd as $dtdFkt => $dtdName) {
+
+                foreach ($ckeditorParamDtd[$dtdFkt] as $attribute => $val) {
+                    $ckeditorDTD .= "CKEDITOR.dtd.{$dtdFkt}.{$attribute} = {$val};";
+                }
+            }
+        } else {
+            $ckeditorDTD = '';
+        }
+
+        $js = <<<EOP
+{$ckeditorDTD}
 CKEDITOR.replace('{$name}',{$options});
 EOP;
         $cs->registerScript('Yii.'.get_class($this).'#'.$id, $js, CClientScript::POS_LOAD);
