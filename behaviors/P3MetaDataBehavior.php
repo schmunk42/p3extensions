@@ -43,7 +43,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     const STATUS_ARCHIVE = 60;
     const ALL_LANGUAGES  = '*';
     const APP_LANGUAGE   = '!';
-    const SUPERUSE_ROLE  = 'Superuser';
+    const SUPERUSER_ROLE  = 'Superuser';
 
     /**
      * Name of the relation identifier in the 'parent' model
@@ -96,7 +96,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
     /**
      * @var
      */
-    public $superuserRole = self::SUPERUSE_ROLE;
+    public $superuserRole = self::SUPERUSER_ROLE;
 
     private $_children = null;
     private $_parent = null;
