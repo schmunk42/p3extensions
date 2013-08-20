@@ -356,6 +356,7 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         if ($this->_metaDataModel !== null) {
             $this->_metaDataModel->delete(); // delete, if base record is already deleted
         }
+        Yii::app()->setGlobalState('p3extensions.behaviors.P3MetaDataBehavior:lastDelete:'. $this->owner->tableSchema->name, microtime(true));
         return true;
     }
 
