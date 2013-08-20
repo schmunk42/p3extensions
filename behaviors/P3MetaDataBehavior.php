@@ -442,6 +442,8 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
             $metaModel->checkAccessRead   = $defaultRoles['defaultRoleRead'];
             $metaModel->createdAt         = date('Y-m-d H:i:s');
             $metaModel->createdBy         = $userId;
+            $metaModel->modifiedAt        = date('Y-m-d H:i:s');
+            $metaModel->modifiedBy        = $userId;
             $metaModel->guid              = sprintf(
                 '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
                 mt_rand(0, 65535),
