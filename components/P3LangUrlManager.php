@@ -1,6 +1,6 @@
 <?php
 /**
- * Class File, based upon http://www.yiiframework.com/extension/langhandler/
+ * Class File
  *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @link http://www.phundament.com/
@@ -10,15 +10,21 @@
 
 /**
  * Url manager, creates URLs with 'lang' param
- * 
+ * Based upon http://www.yiiframework.com/extension/langhandler/
+ *
  * @see P3LangHandler
  *
  * @author Tobias Munk <schmunk@usrbin.de>
  * @package p3extensions.components
- * @since 3.0.3
+ * @since 0.5
  */
 class P3LangUrlManager extends CUrlManager {
-    
+
+    public function init(){
+        parent::init();
+        Yii::app()->homeUrl = $this->createUrl('/');
+    }
+
     public function createUrl($route,$params=array(),$ampersand='&') {
 
         if (isset($params['lang']) && $params['lang'] == "__EMPTY__") {
