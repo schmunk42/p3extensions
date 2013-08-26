@@ -392,6 +392,10 @@ class Image_GD_Driver extends Image_Driver {
 		return imageconvolution($this->tmp_image, $matrix, $amount - 8, 0);
 	}
 
+    public function removeAllColorProfiles(){
+        throw new CException('removeAllColorProfiles unsupported method in GDlib');
+    }
+
 	protected function properties()
 	{
 		return array(imagesx($this->tmp_image), imagesy($this->tmp_image));

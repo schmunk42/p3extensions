@@ -310,6 +310,18 @@ class Image {
 		return $this;
 	}
 
+    /**
+     * Removes all color profiles, only available for ImageMagick
+     *
+     * @return  object
+     */
+    public function removeAllColorProfiles()
+    {
+        $this->actions['removeAllColorProfiles'] = true;
+
+        return $this;
+    }
+
 	/**
 	 * Save the image to a new image or overwrite this image.
 	 *
