@@ -217,6 +217,28 @@ class Image_ImageMagick_Driver extends Image_Driver {
             $this->errors[] = $error;
             return FALSE;
         }
+        return TRUE;
+    }
+
+    public function profile($profiles){
+        $srcProfile = $profiles['src']; // see profiles folder
+        $destProfile  = $profiles['dest'];
+        $cmd = escapeshellcmd($this->dir.'convert'.$this->ext).' -profile "'.$srcProfile.'" '.$this->cmd_image.' -profile "'.$destProfile.'" '.$this->cmd_image;
+        if ($error = exec($cmd))
+        {
+            $this->errors[] = $error;
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    public function density($dpi)
+    {
+        if ($error = exec(escapeshellcmd($this->dir.'convert'.$this->ext).' -density '.escapeshellarg($dpi).' '.$this->cmd_image.' '.$this->cmd_image))
+        {
+            $this->errors[] = $error;
+            return FALSE;
+        }
 
         return TRUE;
     }

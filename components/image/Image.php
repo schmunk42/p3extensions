@@ -322,6 +322,34 @@ class Image {
         return $this;
     }
 
+    /**
+     * Converts file from a src (source) to a dest (destination) color profile
+     *
+     * @return  object
+     */
+    public function profile($src, $dest)
+    {
+        $this->actions['profile'] = array
+        (
+            'src'  => $src,
+            'dest' => $dest,
+        );
+
+        return $this;
+    }
+
+    /**
+     * Set image resolution, only available for ImageMagick
+     *
+     * @return  object
+     */
+    public function density($dpi)
+    {
+        $this->actions['density'] = $dpi;
+
+        return $this;
+    }
+
 	/**
 	 * Save the image to a new image or overwrite this image.
 	 *
