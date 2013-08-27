@@ -163,15 +163,17 @@ class Image_ImageMagick_Driver extends Image_Driver {
 				$dim = escapeshellarg($prop['width'].'x'.$prop['height']);
 			break;
             case Image::AUTO_FIT:   // FIT WxH
-                $dim = escapeshellarg($prop['width'] . 'x' . $prop['height'] . '^ -gravity center -extent ' . $prop['width'] . 'x' . $prop['height']);
+                $dim = $prop['width'] . 'x' . $prop['height'] . '^ -gravity center -extent ' . $prop['width'] . 'x' . $prop['height'];
             break;
 			case Image::NONE:   // WxH!
 				$dim = escapeshellarg($prop['width'].'x'.$prop['height'].'!');
 			break;
 		}
 
+        $cmd = escapeshellcmd($this->dir.'convert'.$this->ext).' -resize '.$dim.' '.$this->cmd_image.' '.$this->cmd_image;
+
 		// Use "convert" to change the width and height
-		if ($error = exec(escapeshellcmd($this->dir.'convert'.$this->ext).' -resize '.$dim.' '.$this->cmd_image.' '.$this->cmd_image))
+		if ($error = exec($cmd))
 		{
 			$this->errors[] = $error;
 			return FALSE;
