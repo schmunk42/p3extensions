@@ -45,6 +45,12 @@ class P3LangHandler extends CApplicationComponent
     public $fallback = true;
 
     /**
+     * whether to use the preferred user language or the default application language
+     * @var bool
+     */
+    public $usePreferred = true;
+
+    /**
      * Handles language detection and application setting by URL parm specified in DATA_KEY
      */
     public function init()
@@ -57,10 +63,12 @@ class P3LangHandler extends CApplicationComponent
 		if (isset($_GET[self::DATA_KEY])) {
 			// use language from URL
 			$preferred = $_GET[self::DATA_KEY];
-		} else {
+		} elseif ($this->usePreferred) {
 			// use preferred browser language as default
-			$preferred = Yii::app()->getRequest()->getPreferredLanguage();
-		}
+			$preferred = Yii::app()->request->preferredLanguage;
+		} else {
+            $preferred = Yii::app()->language;
+        }
 
 		// 2. select language based on available languages and mappings
 		$lang = $this->resolveLanguage($preferred);
