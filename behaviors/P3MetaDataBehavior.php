@@ -301,22 +301,6 @@ class P3MetaDataBehavior extends CActiveRecordBehavior
         $metaData->save();
     }
 
-    public function beforeFind($event)
-    {
-        parent::beforeFind($event);
-
-        // exist in console app - disable
-        if (Yii::app() instanceof CConsoleApplication) {
-            Yii::log('Meta Data behavior omitted in console application.', CLogger::LEVEL_INFO);
-
-            return true;
-        }
-
-        //echo get_class($this->owner);
-        $criteria = $this->createAccessCriteria('checkAccessRead');
-        $this->owner->applyScopes($criteria);
-        $this->owner->setDbCriteria($criteria);
-    }
 
     /**
      * Checks permissions in attribute checkAccessDelete and saves meta-data model for afterDelete
