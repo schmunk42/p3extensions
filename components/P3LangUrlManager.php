@@ -20,11 +20,6 @@
  */
 class P3LangUrlManager extends CUrlManager {
 
-    public function init(){
-        parent::init();
-        Yii::app()->homeUrl = $this->createUrl('/');
-    }
-
     public function createUrl($route,$params=array(),$ampersand='&') {
 
         if (isset($params['lang']) && $params['lang'] == "__EMPTY__") {
