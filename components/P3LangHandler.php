@@ -62,7 +62,9 @@ class P3LangHandler extends CApplicationComponent
     public function init()
     {
         // parsing needed if urlFormat 'path'
-        Yii::app()->urlManager->parseUrl(Yii::app()->getRequest());
+        if (Yii::app() instanceof CWebApplication) {
+            Yii::app()->urlManager->parseUrl(Yii::app()->getRequest());
+        }
 
         // 1. get language preference
         $preferred = null;
