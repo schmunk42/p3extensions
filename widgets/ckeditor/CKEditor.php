@@ -230,8 +230,7 @@ class CKEditor extends CInputWidget{
         list($name,$id) = $this->resolveNameID();
 
         $options['language'] = $this->language;
-
-    // to make the content look like if it were in your target page
+        // to make the content look like if it were in your target page
         if ($this->contentCSS !== '') {
             $options['contentsCss'] = $this->contentCSS;
         }
@@ -267,7 +266,7 @@ class CKEditor extends CInputWidget{
         if (is_array($this->options)) {
             $options = array_merge($options, $this->options);
         }
-		
+
 		// post parse special options
 		$createUrls = array('filebrowserBrowseCreateUrl','filebrowserImageBrowseCreateUrl','filebrowserFlashBrowseCreateUrl','filebrowserUploadCreateUrl');
 		foreach($createUrls AS $name) {
@@ -277,7 +276,20 @@ class CKEditor extends CInputWidget{
 				$options[str_replace('CreateUrl', 'Url', $name)] = $this->controller->createUrl($route, $options[$name]);
 			}					
 		}
-		
+
+        // publish assets
+        if (isset($options['contentsCssAssets'])) {
+            $path = Yii::getPathOfAlias($options['contentsCssAssets']);
+            if ($path === false) {
+                throw new CException('Ckeditor asset path not found.');
+            } else {
+                $assets                 = Yii::app()->assetManager->publish($path);
+                if (!isset($options['contentsCss'])) {
+                    $options['contentsCss'] = "";
+                }
+                $options['contentsCss'] = $assets . '/' . $options['contentsCss'];
+            }
+        }
 
         return CJavaScript::encode($options);
    }
