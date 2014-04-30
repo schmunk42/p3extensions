@@ -35,6 +35,7 @@ class Image {
 		IMAGETYPE_TIFF_II => 'tiff',
 		IMAGETYPE_TIFF_MM => 'tiff',
 		IMAGETYPE_BMP => 'bmp',
+        'pdf' => 'pdf'
 	);
 
 	// Driver instance
@@ -89,15 +90,29 @@ class Image {
 		// Turn on error reporting again
 		error_reporting($ER);
 
-		// Make sure that the image is readable and valid
-		if ( ! is_array($image_info) OR count($image_info) < 3)
-			throw new CException('image file unreadable');
+        // workaround for PDF files, TODO: check if we're using ImageMagick
+        if (substr($image, -3, 3) == "pdf") {
 
-		// Check to make sure the image type is allowed
-		if ( ! isset(Image::$allowed_types[$image_info[2]]))
-			throw new CException('image type '.$image_info[2].' not allowed');
+            // "fake" params for PDF files
+            $image_info[0]      = $image_info[1] = null;
+            $image_info[2]      = 'pdf';
+            $image_info['mime'] = 'pdf';
 
-		// Image has been validated, load it
+        } else {
+
+            // Make sure that the image is readable and valid
+            if (!is_array($image_info) OR count($image_info) < 3) {
+                throw new CException('image file unreadable');
+            }
+
+            // Check to make sure the image type is allowed
+            if (!isset(Image::$allowed_types[$image_info[2]])) {
+                throw new CException('image type ' . $image_info[2] . ' not allowed');
+            }
+
+        }
+
+        // Image has been validated, load it
 		$this->image = array
 		(
 			'file' => str_replace('\\', '/', realpath($image)),
