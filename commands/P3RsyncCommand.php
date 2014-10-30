@@ -27,7 +27,7 @@ class P3RsyncCommand extends CConsoleCommand
 	 * Yii aliases (directories) within the application which can be synced
 	 * @var type array
 	 */
-    public $aliases;
+        public $aliases;
 	/**
 	 * Additional rsync command line params
 	 * @var type string
@@ -36,7 +36,7 @@ class P3RsyncCommand extends CConsoleCommand
 
     public function getHelp() {
         echo <<<EOS
-Usage: yiic rsync <server:src> <server:dest> <alias>
+Usage: yiic rsync <server:src> <server:dest> <alias> [<filename>]
 
 Specify the shorthands in config/console.php, make sure the
 URLs point to the yii webapp directory (usually 'protected').
@@ -81,14 +81,15 @@ EOS;
         $src = $args[0];
         $dest = $args[1];
         $alias = $args[2];
+        $file = (isset($args[3])) ? $args[3] : "";
 
         $path = Yii::getPathOfAlias($this->aliases[$alias]);
         $relativePath = str_replace(Yii::app()->basePath,"",$path);
 
-        $srcUrl = $this->servers[$src].$relativePath."/";
-        $destUrl = $this->servers[$dest].$relativePath."/";
+        $srcUrl = $this->servers[$src].$relativePath."/".$file;
+        $destUrl = $this->servers[$dest].$relativePath."/".$file;
 
-        echo "Start rsync of '".$alias."' (".$relativePath.") from '".$src."' to '".$dest."'? [Yes|No] ";
+        echo "Start rsync of '".$alias."' (".$relativePath."/".$file.") from '".$src."' to '".$dest."'? [Yes|No] ";
         if(!strncasecmp(trim(fgets(STDIN)),'y',1)) {
             $cmd = "rsync {$this->params} -av ".$srcUrl." ".$destUrl;
             echo "\n".$cmd."\n";
