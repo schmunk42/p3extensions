@@ -45,11 +45,11 @@ URLs point to the yii webapp directory (usually 'protected').
     'rsync'=>array(
         'class' => 'ext.phundament.p3extensions.commands.P3RsyncCommand',
         'servers' => array(
-            'dev' => realpath(dirname(__FILE__).'/..'),             // local development path
-            'prod' => 'user@example.com:/path/to/webapp/protected', // remote url
+            'locyl' => realpath(dirname(__FILE__).'/..'),             // local development path
+            'prod'  => 'user@example.com:/path/to/webapp/protected',  // remote url
         ),
         'aliases' => array(
-            'data' => 'application.data'                            // alias to be synced
+            'data' => 'application.data'                              // alias to be synced
         ),
     ),
 ),
@@ -60,9 +60,11 @@ EOS;
     }
 
     /**
-	 * Syncs from 'server1' to 'server2' the 'alias'
-	 * @param type $args
-	 */
+     * Syncs from 'server1' to 'server2' the 'alias'
+     * @param array $args
+     *
+     * @return int|void
+     */
 	public function run($args) {
         if (!isset($this->servers)) {
             echo "No server specified in config!";
@@ -89,16 +91,13 @@ EOS;
         $srcUrl = $this->servers[$src].$relativePath."/".$file;
         $destUrl = $this->servers[$dest].$relativePath."/".$file;
 
+        $cmd = "rsync {$this->params} -av ".$srcUrl." ".$destUrl;
+        echo "\n".$cmd."\n\n";
         echo "Start rsync of '".$alias."' (".$relativePath."/".$file.") from '".$src."' to '".$dest."'? [Yes|No] ";
         if(!strncasecmp(trim(fgets(STDIN)),'y',1)) {
-            $cmd = "rsync {$this->params} -av ".$srcUrl." ".$destUrl;
-            echo "\n".$cmd."\n";
             system($cmd, $output);
         } else {
             echo "Skipped.\n";
         }
     }
-
 }
-
-?>
