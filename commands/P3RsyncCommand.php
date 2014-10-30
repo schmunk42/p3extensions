@@ -45,7 +45,7 @@ URLs point to the yii webapp directory (usually 'protected').
     'rsync'=>array(
         'class' => 'ext.phundament.p3extensions.commands.P3RsyncCommand',
         'servers' => array(
-            'locyl' => realpath(dirname(__FILE__).'/..'),             // local development path
+            'local' => realpath(dirname(__FILE__).'/..'),             // local development path
             'prod'  => 'user@example.com:/path/to/webapp/protected',  // remote url
         ),
         'aliases' => array(
