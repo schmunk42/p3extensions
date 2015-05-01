@@ -1,4 +1,4 @@
-# Phundament Extensions
+# Phundament 3 Extensions
 
 Extensions shared among Phundament 3 core modules.
 
