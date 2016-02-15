@@ -69,7 +69,7 @@ class CKEditor extends CInputWidget{
 
     private $toolbar=array();
     
-    public $skin='kama';
+    public $skin='moono';
     private $theme='default';
 
 
